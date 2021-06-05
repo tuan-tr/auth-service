@@ -17,6 +17,7 @@ public class BitwiseAndSQLFunction extends StandardSQLFunction {
   }
 
   @Override
+  @SuppressWarnings("rawtypes")
   public String render(Type firstArgumentType, List args, SessionFactoryImplementor factory) {
     if (args.size() != 2) {
       throw new IllegalArgumentException("the function bitwise_and requires 2 arguments");
