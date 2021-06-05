@@ -1,8 +1,7 @@
 package com.tth.auth.dto.authentication;
 
 import javax.validation.constraints.NotNull;
-
-import org.hibernate.validator.constraints.Length;
+import javax.validation.constraints.Size;
 
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -17,11 +16,11 @@ import lombok.NoArgsConstructor;
 public class SigninRequest {
 
   @NotNull
-  @Length(min = 1, max=100)
+  @Size(min = 1, max = 100)
   private String username;
 
   @NotNull
-  @Length(min = 1, max=72)
+  @Size(min = 1, max = 72)
   private String password;
 
 }

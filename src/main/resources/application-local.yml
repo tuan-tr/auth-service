@@ -5,6 +5,10 @@ logging:
         SQL: DEBUG
         type.descriptor.sql.BasicBinder: TRACE
 
+# spring.jpa.properties.hibernate.format_sql: true
+
+ENABLED_API_DOCS: true
+
 SPRING_DATASOURCE_URL: jdbc:postgresql://127.0.0.1:5432/tth
 SPRING_DATASOURCE_USERNAME: postgres
 SPRING_DATASOURCE_PASSWORD: postgres
