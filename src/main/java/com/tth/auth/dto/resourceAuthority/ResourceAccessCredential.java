@@ -8,6 +8,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Singular;
 
 @Getter
 @Builder
@@ -18,6 +19,8 @@ public class ResourceAccessCredential {
   private ResourceType resourceType;
   private String resourceId;
   private Collection<UUID> targetIds;
+  
+  @Singular
   private Collection<ResourcePermission> permissions;
 
 }

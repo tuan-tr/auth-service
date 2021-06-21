@@ -9,13 +9,13 @@ import lombok.AllArgsConstructor;
 @AllArgsConstructor
 public class DuplicateKeyException extends CustomException {
 
-  private String fieldName;
+  private String field;
   private Object value;
 
   @Override
   public Object getDetail() {
     HashMap<String, Object> detail = new HashMap<>();
-    detail.put("fieldName", this.fieldName);
+    detail.put("field", this.field);
     detail.put("value", this.value);
     return detail;
   }
