@@ -1,5 +1,8 @@
 package com.tth.auth.dto.resourceAuthority;
 
+import java.util.Arrays;
+import java.util.Collection;
+
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
@@ -17,5 +20,17 @@ public enum ResourcePermission {
   ADD_ELEMENT(64);
 
   int code;
+  
+  public static int sum(Collection<ResourcePermission> permissions) {
+    return permissions.stream()
+        .mapToInt(ResourcePermission::getCode)
+        .sum();
+  }
+  
+  public static int sum(ResourcePermission... permissions) {
+    return Arrays.asList(permissions).stream()
+        .mapToInt(ResourcePermission::getCode)
+        .sum();
+  }
 
 }
