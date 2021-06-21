@@ -44,4 +44,14 @@ public interface ResourceAuthorityRepository extends JpaRepository<ResourceAutho
       @Param("permissions") @NotNull int permissions,
       Pageable pageable);
   
+  @Query(nativeQuery = true, value =
+    "SELECT DISTINCT resource_id FROM {h-schema}resource_authority "
+  + "WHERE resource_type = :resourceType "
+  + "AND target_id IN (:targetIds) "
+  + "AND permissions & :permissions = :permissions ")
+  List<String> findResourceIdsByTargets(
+      @Param("resourceType") @NotNull String resourceType,
+      @Param("targetIds") @NotEmpty Collection<UUID> targetIds,
+      @Param("permissions") @NotNull int permissions);
+
 }

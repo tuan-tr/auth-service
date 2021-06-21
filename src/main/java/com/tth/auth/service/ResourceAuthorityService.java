@@ -47,5 +47,21 @@ public class ResourceAuthorityService {
     boolean hasPermission = resourceAuthorities.size() > 0;
     return hasPermission;
   }
-
+  
+  public List<String> findAuthorizedResourceIds(ResourceAccessCredential credential) {
+    int permissions = ResourcePermission.sum(credential.getPermissions());
+    List<String> resourceIds = resourceAuthorityRepository.findResourceIdsByTargets(
+          credential.getResourceType().toString(), 
+          credential.getTargetIds(), 
+          permissions);
+    return resourceIds;
+  }
+  
+  public List<UUID> findAuthorizedResourceUUIDs(ResourceAccessCredential credential) {
+    List<UUID> resourceIds = this.findAuthorizedResourceIds(credential).stream()
+        .map(UUID::fromString)
+        .collect(Collectors.toList());
+    return resourceIds;
+  }
+  
 }
