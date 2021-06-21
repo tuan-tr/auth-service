@@ -1,7 +1,5 @@
 package com.tth.auth.service;
 
-import java.util.Optional;
-
 import com.tth.auth.configuration.security.token.TokenProvider;
 import com.tth.auth.configuration.security.user.UserAuthority;
 import com.tth.auth.dto.authentication.Credentials;
@@ -20,7 +18,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -88,15 +85,6 @@ public class AuthenticationService {
     return Credentials.builder()
         .accessToken(token)
         .build();
-  }
-
-  public Optional<UserAuthority> getCurrentUser() {
-    return Optional.ofNullable(SecurityContextHolder.getContext())
-        .map(SecurityContext::getAuthentication)
-        .filter(Authentication::isAuthenticated)
-        .map(Authentication::getPrincipal)
-        .filter(principal -> principal instanceof UserAuthority)
-        .map(UserAuthority.class::cast);
   }
 
 }

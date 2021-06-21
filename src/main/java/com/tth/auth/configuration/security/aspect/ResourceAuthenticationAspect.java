@@ -6,8 +6,8 @@ import com.tth.auth.configuration.security.annotation.ResourceAuthentication;
 import com.tth.auth.configuration.security.user.UserAuthority;
 import com.tth.auth.dto.resourceAuthority.ResourceAccessCredential;
 import com.tth.auth.exception.ResourcePermissionNotFoundException;
-import com.tth.auth.service.AuthenticationService;
 import com.tth.auth.service.ResourceAuthorityService;
+import com.tth.auth.utils.CurrentUserContext;
 
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.annotation.Aspect;
@@ -25,9 +25,6 @@ public class ResourceAuthenticationAspect {
   @Autowired
   private ResourceAuthorityService resourceAuthorityService;
 
-  @Autowired
-  private AuthenticationService authenticationService;
-
   @Before("@annotation(resourceAuthentication)")
   public void verifyPermissionOnResource(JoinPoint joinPoint,
       ResourceAuthentication resourceAuthentication
@@ -40,7 +37,7 @@ public class ResourceAuthenticationAspect {
       resourceId = expression.getValue(joinPoint).toString();
     }
 
-    UserAuthority currentUser = authenticationService.getCurrentUser()
+    UserAuthority currentUser = CurrentUserContext.find()
         .orElseThrow(() -> new AuthenticationCredentialsNotFoundException(
             "No current user associated with this request"));
 
