@@ -15,13 +15,12 @@ import org.springframework.validation.annotation.Validated;
 @Validated
 public interface GroupMemberRepository extends JpaRepository<GroupMember, UUID> {
 
-  @Query(value =
-  "SELECT gm.group_id " +
-  "FROM {h-schema}group_member gm " +
-  "LEFT JOIN {h-schema}tth_group gr ON gr.id = gm.group_id " +
-  "WHERE gm.user_id = :userId " +
-  "AND gr.enabled = true ",
-  nativeQuery = true)
+  @Query(nativeQuery = true, value =
+    "SELECT gm.group_id "
+  + "FROM {h-schema}group_member gm "
+  + "LEFT JOIN {h-schema}tth_group gr ON gr.id = gm.group_id "
+  + "WHERE gm.user_id = :userId "
+  + "AND gr.enabled = true ")
   List<UUID> findEnabledGroupIds(@Param("userId") @NotNull UUID userId);
 
 }

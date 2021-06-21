@@ -60,7 +60,7 @@ public class HasPermissionTest {
         .permissions(permissions)
         .build();
 
-    when(resourceAuthorityRepository.findMatchedOnSpecificResource(
+    when(resourceAuthorityRepository.findOnSpecificResource(
             any(ResourceType.class),
             anyString(),
             ArgumentMatchers.<UUID>anyList(),
@@ -86,7 +86,7 @@ public class HasPermissionTest {
         .permissions(permissions)
         .build();
 
-    when(resourceAuthorityRepository.findMatchedOnSpecificResource(
+    when(resourceAuthorityRepository.findOnSpecificResource(
             any(ResourceType.class),
             anyString(),
             ArgumentMatchers.<UUID>anyList(),
@@ -110,7 +110,7 @@ public class HasPermissionTest {
         .permissions(permissions)
         .build();
 
-    when(resourceAuthorityRepository.findMatchedOnResourceType(
+    when(resourceAuthorityRepository.findOnResourceType(
             any(ResourceType.class),
             ArgumentMatchers.<UUID>anyList(),
             anyInt(),
@@ -133,7 +133,7 @@ public class HasPermissionTest {
         .permissions(permissions)
         .build();
 
-    when(resourceAuthorityRepository.findMatchedOnResourceType(
+    when(resourceAuthorityRepository.findOnResourceType(
             any(ResourceType.class),
             ArgumentMatchers.<UUID>anyList(),
             anyInt(),

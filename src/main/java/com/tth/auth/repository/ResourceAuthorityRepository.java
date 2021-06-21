@@ -20,12 +20,12 @@ import org.springframework.validation.annotation.Validated;
 public interface ResourceAuthorityRepository extends JpaRepository<ResourceAuthority, UUID> {
 
   @Query(value =
-  "SELECT ra FROM ResourceAuthority ra " +
-  "WHERE resourceType = :resourceType " +
-  "AND (resourceId IS NULL OR resourceId = :resourceId) " +
-  "AND targetId IN (:targetIds) " +
-  "AND bitwise_and(permissions, :permissions) = :permissions")
-  List<ResourceAuthority> findMatchedOnSpecificResource(
+    "SELECT ra FROM ResourceAuthority ra "
+  + "WHERE resourceType = :resourceType "
+  + "AND (resourceId IS NULL OR resourceId = :resourceId) "
+  + "AND targetId IN (:targetIds) "
+  + "AND bitwise_and(permissions, :permissions) = :permissions ")
+  List<ResourceAuthority> findOnSpecificResource(
       @Param("resourceType") @NotNull ResourceType resourceType,
       @Param("resourceId") @NotNull String resourceId,
       @Param("targetIds") @NotEmpty Collection<UUID> targetIds,
@@ -33,15 +33,15 @@ public interface ResourceAuthorityRepository extends JpaRepository<ResourceAutho
       Pageable pageable);
 
   @Query(value =
-  "SELECT ra FROM ResourceAuthority ra " +
-  "WHERE resourceType = :resourceType " +
-  "AND resourceId IS NULL " +
-  "AND targetId IN (:targetIds) " +
-  "AND bitwise_and(permissions, :permissions) = :permissions")
-  List<ResourceAuthority> findMatchedOnResourceType(
+    "SELECT ra FROM ResourceAuthority ra "
+  + "WHERE resourceType = :resourceType "
+  + "AND resourceId IS NULL "
+  + "AND targetId IN (:targetIds) "
+  + "AND bitwise_and(permissions, :permissions) = :permissions ")
+  List<ResourceAuthority> findOnResourceType(
       @Param("resourceType") @NotNull ResourceType resourceType,
       @Param("targetIds") @NotEmpty Collection<UUID> targetIds,
       @Param("permissions") @NotNull int permissions,
       Pageable pageable);
-
+  
 }

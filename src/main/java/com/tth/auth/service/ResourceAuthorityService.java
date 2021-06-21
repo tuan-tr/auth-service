@@ -1,6 +1,8 @@
 package com.tth.auth.service;
 
 import java.util.List;
+import java.util.UUID;
+import java.util.stream.Collectors;
 
 import com.tth.auth.dto.resourceAuthority.ResourceAccessCredential;
 import com.tth.auth.dto.resourceAuthority.ResourcePermission;
@@ -23,20 +25,18 @@ public class ResourceAuthorityService {
   public boolean hasPermission(ResourceAccessCredential credential) {
     Pageable limit1Filter = PageRequest.of(0, 1);
 
-    int permissions = credential.getPermissions().stream()
-        .mapToInt(ResourcePermission::getCode)
-        .sum();
+    int permissions = ResourcePermission.sum(credential.getPermissions());
 
     List<ResourceAuthority> resourceAuthorities;
     boolean isVerifyOnResourceType = credential.getResourceId() == null;
     if (isVerifyOnResourceType) {
-      resourceAuthorities = resourceAuthorityRepository.findMatchedOnResourceType(
+      resourceAuthorities = resourceAuthorityRepository.findOnResourceType(
           credential.getResourceType(),
           credential.getTargetIds(),
           permissions,
           limit1Filter);
     } else {
-      resourceAuthorities = resourceAuthorityRepository.findMatchedOnSpecificResource(
+      resourceAuthorities = resourceAuthorityRepository.findOnSpecificResource(
           credential.getResourceType(),
           credential.getResourceId(),
           credential.getTargetIds(),

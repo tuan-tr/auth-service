@@ -31,10 +31,10 @@ public class FindMatchedTest {
   private ResourceAuthorityRepository resourceAuthorityRepository;
 
   @Test
-  public void findMatchedOnSpecificResource_found0_readPermissionOfUser2OnUser1() {
+  public void findOnSpecificResource_found0_readPermissionOfUser2OnUser1() {
     Pageable unpaged = Pageable.unpaged();
     List<ResourceAuthority> resourceAuthorities = resourceAuthorityRepository
-        .findMatchedOnSpecificResource(
+        .findOnSpecificResource(
             ResourceType.USER,
             user1Id.toString(),
             Arrays.asList(user2Id),
@@ -45,10 +45,10 @@ public class FindMatchedTest {
   }
 
   @Test
-  public void findMatchedOnSpecificResource_found1_readUpdatePermissionOfUser2OnUser2() {
+  public void findOnSpecificResource_found1_readUpdatePermissionOfUser2OnUser2() {
     Pageable unpaged = Pageable.unpaged();
     List<ResourceAuthority> resourceAuthorities = resourceAuthorityRepository
-        .findMatchedOnSpecificResource(
+        .findOnSpecificResource(
             ResourceType.USER,
             user2Id.toString(),
             Arrays.asList(user2Id),
@@ -59,10 +59,10 @@ public class FindMatchedTest {
   }
 
   @Test
-  public void findMatchedOnSpecificResource_found2_readPermissionOfUser1OnUser1() {
+  public void findOnSpecificResource_found2_readPermissionOfUser1OnUser1() {
     Pageable unpaged = Pageable.unpaged();
     List<ResourceAuthority> resourceAuthorities = resourceAuthorityRepository
-        .findMatchedOnSpecificResource(
+        .findOnSpecificResource(
             ResourceType.USER,
             user1Id.toString(),
             Arrays.asList(user1Id),
@@ -73,10 +73,10 @@ public class FindMatchedTest {
   }
 
   @Test
-  public void findMatchedOnSpecificResource_found1_updateDeletePermissionOfUser1OnUser2() {
+  public void findOnSpecificResource_found1_updateDeletePermissionOfUser1OnUser2() {
     Pageable unpaged = Pageable.unpaged();
     List<ResourceAuthority> resourceAuthorities = resourceAuthorityRepository
-        .findMatchedOnSpecificResource(
+        .findOnSpecificResource(
             ResourceType.USER,
             user2Id.toString(),
             Arrays.asList(user1Id),
@@ -88,10 +88,10 @@ public class FindMatchedTest {
 
 
   @Test
-  public void findMatchedOnResourceType_found0_readPermissionOfUser2OnUserType() {
+  public void findOnResourceType_found0_readPermissionOfUser2OnUserType() {
     Pageable unpaged = Pageable.unpaged();
     List<ResourceAuthority> resourceAuthorities = resourceAuthorityRepository
-        .findMatchedOnResourceType(
+        .findOnResourceType(
             ResourceType.USER,
             Arrays.asList(user2Id),
             ResourcePermission.READ.getCode(),
@@ -101,10 +101,10 @@ public class FindMatchedTest {
   }
 
   @Test
-  public void findMatchedOnResourceType_found1_createReadPermissionOfUser1OnUserType() {
+  public void findOnResourceType_found1_createReadPermissionOfUser1OnUserType() {
     Pageable unpaged = Pageable.unpaged();
     List<ResourceAuthority> resourceAuthorities = resourceAuthorityRepository
-        .findMatchedOnResourceType(
+        .findOnResourceType(
             ResourceType.USER,
             Arrays.asList(user1Id),
             ResourcePermission.CREATE.getCode() + ResourcePermission.READ.getCode(),
