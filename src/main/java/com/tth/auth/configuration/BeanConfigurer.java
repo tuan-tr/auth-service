@@ -6,6 +6,7 @@ import java.util.TreeMap;
 import com.tth.auth.configuration.setting.UserSetting;
 
 import org.springdoc.core.customizers.OpenApiCustomiser;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -27,17 +28,18 @@ import io.swagger.v3.oas.models.media.Schema;
     bearerFormat = "JWT",
     scheme = "bearer")
 public class BeanConfigurer {
-
+  
+  @Bean
+  public String defaultUserPassword(
+    @Value("${setting.default-user-password}") String defaultUserPassword
+  ) {
+    return defaultUserPassword;
+  }
+  
   @Bean
   @ConfigurationProperties(prefix = "setting.admin-user")
-  UserSetting adminUserSetting() {
+  public UserSetting adminUserSetting() {
     return new UserSetting();
-  }
-
-  @Bean
-  @ConfigurationProperties(prefix = "setting.default-user-password")
-  String defaultUserPassword() {
-    return new String();
   }
   
   @Bean
