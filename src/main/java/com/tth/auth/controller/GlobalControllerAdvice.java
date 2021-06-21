@@ -16,39 +16,24 @@ import org.springframework.security.core.AuthenticationException;
 import org.springframework.util.ObjectUtils;
 import org.springframework.validation.BindException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
-import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 import org.springframework.web.servlet.NoHandlerFoundException;
+import lombok.extern.log4j.Log4j2;
 
-import lombok.extern.slf4j.Slf4j;
-
-@Slf4j
-@ControllerAdvice
+@Log4j2
+@RestControllerAdvice
 public class GlobalControllerAdvice {
 
   @Autowired
   private ObjectMapper objectMapper;
 
-  // TODO keep or not
-  // @ExceptionHandler(IllegalArgumentException.class)
-  public ResponseEntity<?> handle(IllegalArgumentException e, WebRequest request) {
-    ExceptionResponseBody body = ExceptionResponseBody.builder()
-        .timestamp(OffsetDateTime.now())
-        .path(request.getDescription(false))
-        .status(HttpStatus.BAD_REQUEST.value())
-        .error(e.getClass().getSimpleName())
-        .message(e.getMessage())
-        .build();
-
-    log.warn("Exception: {}", convertToJson(body));
-    return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(body);
-  }
-
   @ExceptionHandler(CustomException.class)
   public ResponseEntity<?> handle(CustomException e, WebRequest request) {
-    ExceptionResponseBody body = ExceptionResponseBody.builder()
+    ExceptionResponseBody response = ExceptionResponseBody.builder()
         .timestamp(OffsetDateTime.now())
         .path(request.getDescription(false))
         .status(e.getHttpStatus().value())
@@ -57,13 +42,14 @@ public class GlobalControllerAdvice {
         .message(e.getMessage())
         .build();
 
-    log.warn("Exception: {}", convertToJson(body));
-    return ResponseEntity.status(e.getHttpStatus()).body(body);
+    log.warn("Exception: {}", convertToJson(response));
+    return ResponseEntity.status(e.getHttpStatus()).body(response);
   }
 
   @ExceptionHandler(NoHandlerFoundException.class)
-  public ResponseEntity<?> handle(NoHandlerFoundException e, WebRequest request) {
-    ExceptionResponseBody body = ExceptionResponseBody.builder()
+  @ResponseStatus(HttpStatus.NOT_FOUND)
+  public ExceptionResponseBody handle(NoHandlerFoundException e, WebRequest request) {
+    ExceptionResponseBody response = ExceptionResponseBody.builder()
         .timestamp(OffsetDateTime.now())
         .path(request.getDescription(false))
         .status(HttpStatus.NOT_FOUND.value())
@@ -71,18 +57,19 @@ public class GlobalControllerAdvice {
         .message(e.getMessage())
         .build();
 
-    log.warn("Exception: {}", convertToJson(body));
-    return ResponseEntity.status(HttpStatus.NOT_FOUND).body(body);
+    log.warn("Exception: {}", convertToJson(response));
+    return response;
   }
-
+  
   @ExceptionHandler(AuthenticationException.class)
-  public ResponseEntity<?> handle(AuthenticationException e, WebRequest request) {
+  @ResponseStatus(HttpStatus.UNAUTHORIZED)
+  public ExceptionResponseBody handle(AuthenticationException e, WebRequest request) {
     String error = e.getClass().getSimpleName();
     if (ObjectUtils.isEmpty(error)) { // handle from TokenAuthenticationFilter
       error = e.getCause().getClass().getSimpleName();
     }
 
-    ExceptionResponseBody body = ExceptionResponseBody.builder()
+    ExceptionResponseBody response = ExceptionResponseBody.builder()
         .timestamp(OffsetDateTime.now())
         .path(request.getDescription(false))
         .status(HttpStatus.UNAUTHORIZED.value())
@@ -90,13 +77,14 @@ public class GlobalControllerAdvice {
         .message(e.getMessage())
         .build();
 
-    log.warn("Exception: {}", convertToJson(body));
-    return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(body);
+    log.warn("Exception: {}", convertToJson(response));
+    return response;
   }
 
   @ExceptionHandler(BindException.class)
-  public ResponseEntity<?> handle(BindException e, WebRequest request) {
-    ExceptionResponseBody body = ExceptionResponseBody.builder()
+  @ResponseStatus(HttpStatus.BAD_REQUEST)
+  public ExceptionResponseBody handle(BindException e, WebRequest request) {
+    ExceptionResponseBody response = ExceptionResponseBody.builder()
         .timestamp(OffsetDateTime.now())
         .path(request.getDescription(false))
         .status(HttpStatus.BAD_REQUEST.value())
@@ -104,13 +92,14 @@ public class GlobalControllerAdvice {
         .detail(e.getFieldErrors())
         .build();
 
-    log.warn("Exception: {}", convertToJson(body));
-    return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(body);
+    log.warn("Exception: {}", convertToJson(response));
+    return response;
   }
 
   @ExceptionHandler(MethodArgumentTypeMismatchException.class)
-  public ResponseEntity<?> handle(MethodArgumentTypeMismatchException e, WebRequest request) {
-    ExceptionResponseBody body = ExceptionResponseBody.builder()
+  @ResponseStatus(HttpStatus.BAD_REQUEST)
+  public ExceptionResponseBody handle(MethodArgumentTypeMismatchException e, WebRequest request) {
+    ExceptionResponseBody response = ExceptionResponseBody.builder()
         .timestamp(OffsetDateTime.now())
         .path(request.getDescription(false))
         .status(HttpStatus.BAD_REQUEST.value())
@@ -118,13 +107,14 @@ public class GlobalControllerAdvice {
         .message(e.getRootCause().getMessage())
         .build();
 
-    log.warn("Exception: {}", convertToJson(body));
-    return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(body);
+    log.warn("Exception: {}", convertToJson(response));
+    return response;
   }
 
   // @ExceptionHandler(MethodArgumentNotValidException.class)
-  public ResponseEntity<?> handle(MethodArgumentNotValidException e, WebRequest request) {
-    ExceptionResponseBody body = ExceptionResponseBody.builder()
+  @ResponseStatus(HttpStatus.BAD_REQUEST)
+  public ExceptionResponseBody handle(MethodArgumentNotValidException e, WebRequest request) {
+    ExceptionResponseBody response = ExceptionResponseBody.builder()
         .timestamp(OffsetDateTime.now())
         .path(request.getDescription(false))
         .status(HttpStatus.BAD_REQUEST.value())
@@ -133,13 +123,14 @@ public class GlobalControllerAdvice {
         .detail(e.getBindingResult().getAllErrors())
         .build();
 
-    log.warn("Exception: {}", convertToJson(body));
-    return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(body);
+    log.warn("Exception: {}", convertToJson(response));
+    return response;
   }
 
   // @ExceptionHandler(InvalidFormatException.class)
-  public ResponseEntity<?> handle(InvalidFormatException e, WebRequest request) {
-    ExceptionResponseBody body = ExceptionResponseBody.builder()
+  @ResponseStatus(HttpStatus.BAD_REQUEST)
+  public ExceptionResponseBody handle(InvalidFormatException e, WebRequest request) {
+    ExceptionResponseBody response = ExceptionResponseBody.builder()
         .timestamp(OffsetDateTime.now())
         .path(request.getDescription(false))
         .status(HttpStatus.BAD_REQUEST.value())
@@ -147,13 +138,14 @@ public class GlobalControllerAdvice {
         .message(e.getMessage())
         .build();
 
-    log.warn("Exception: {}", convertToJson(body));
-    return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(body);
+    log.warn("Exception: {}", convertToJson(response));
+    return response;
   }
 
   // @ExceptionHandler(JsonParseException.class)
-  public ResponseEntity<?> handle(JsonParseException e, WebRequest request) {
-    ExceptionResponseBody body = ExceptionResponseBody.builder()
+  @ResponseStatus(HttpStatus.BAD_REQUEST)
+  public ExceptionResponseBody handle(JsonParseException e, WebRequest request) {
+    ExceptionResponseBody response = ExceptionResponseBody.builder()
         .timestamp(OffsetDateTime.now())
         .path(request.getDescription(false))
         .status(HttpStatus.BAD_REQUEST.value())
@@ -161,8 +153,8 @@ public class GlobalControllerAdvice {
         .message(e.getMessage())
         .build();
 
-    log.warn("Exception: {}", convertToJson(body));
-    return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(body);
+    log.warn("Exception: {}", convertToJson(response));
+    return response;
   }
 
   private String convertToJson(Object object) {

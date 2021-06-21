@@ -13,10 +13,9 @@ import com.tth.auth.dto.resourceAuthority.ResourcePermission;
 import com.tth.auth.dto.resourceAuthority.ResourceType;
 import com.tth.auth.dto.user.UserDTO;
 import com.tth.auth.service.AuthenticationService;
+import com.tth.auth.utils.CurrentUserContext;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
-import org.springframework.security.authentication.AuthenticationCredentialsNotFoundException;
 import org.springframework.security.core.Authentication;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -35,13 +34,13 @@ public class AuthenticationController {
   private AuthenticationService authenticationService;
 
   @PostMapping("/signup")
-  public ResponseEntity<UserDTO> signup(@RequestBody @Valid SignupRequest request) {
-    return ResponseEntity.ok(authenticationService.signup(request));
+  public UserDTO signup(@RequestBody @Valid SignupRequest request) {
+    return authenticationService.signup(request);
   }
 
   @PostMapping("/signin")
-  public ResponseEntity<Credentials> signin(@RequestBody @Valid SigninRequest request) {
-    return ResponseEntity.ok(authenticationService.signin(request));
+  public Credentials signin(@RequestBody @Valid SigninRequest request) {
+    return authenticationService.signin(request);
   }
 
   // @GetMapping("/test/{id}")
@@ -49,13 +48,11 @@ public class AuthenticationController {
   @ResourceAuthentication(resourceType = ResourceType.USER,
       permissions = ResourcePermission.READ,
       resourceId = "args[1]")
-  public ResponseEntity<?> test(Authentication authentication,
+  public Object test(Authentication authentication,
       @PathVariable(name = "id") UUID id
   ) {
-    UserAuthority currentUser = authenticationService.getCurrentUser()
-        .orElseThrow(() -> new AuthenticationCredentialsNotFoundException(
-            "No current user associated with this request"));
-    return ResponseEntity.noContent().build();
+    UserAuthority currentUser = CurrentUserContext.get();
+    return null;
   }
 
 }
