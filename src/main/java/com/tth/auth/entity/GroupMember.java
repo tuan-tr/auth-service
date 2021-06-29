@@ -2,6 +2,7 @@ package com.tth.auth.entity;
 
 import java.util.UUID;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
@@ -40,5 +41,8 @@ public class GroupMember extends ShortAuditEntity {
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "groupId", referencedColumnName = "id")
   private Group group;
+  
+  @Column(insertable = false, updatable = false)
+  private UUID groupId;
 
 }

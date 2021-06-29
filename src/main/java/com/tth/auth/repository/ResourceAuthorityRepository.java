@@ -18,7 +18,11 @@ import org.springframework.validation.annotation.Validated;
 
 @Validated
 public interface ResourceAuthorityRepository extends JpaRepository<ResourceAuthority, UUID> {
-
+  
+  long deleteByTargetTypeAndTargetId(ResourceType targetType, UUID targetId);
+  
+  long deleteByResourceTypeAndResourceId(ResourceType resourceType, String resourceId);
+  
   @Query(value =
     "SELECT ra FROM ResourceAuthority ra "
   + "WHERE resourceType = :resourceType "
