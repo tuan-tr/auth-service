@@ -2,26 +2,26 @@ package com.tth.auth.controller;
 
 import java.time.OffsetDateTime;
 
-import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.exc.InvalidFormatException;
 import com.tth.auth.dto.ExceptionResponseBody;
 import com.tth.auth.exception.CustomException;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.util.ObjectUtils;
 import org.springframework.validation.BindException;
-import org.springframework.web.bind.MethodArgumentNotValidException;
+import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 import org.springframework.web.servlet.NoHandlerFoundException;
+
 import lombok.extern.log4j.Log4j2;
 
 @Log4j2
@@ -57,6 +57,21 @@ public class GlobalControllerAdvice {
         .message(e.getMessage())
         .build();
 
+    log.warn("Exception: {}", convertToJson(response));
+    return response;
+  }
+  
+  @ExceptionHandler(HttpRequestMethodNotSupportedException.class)
+  @ResponseStatus(HttpStatus.METHOD_NOT_ALLOWED)
+  public ExceptionResponseBody handle(HttpRequestMethodNotSupportedException e, WebRequest request) {
+    ExceptionResponseBody response = ExceptionResponseBody.builder()
+        .timestamp(OffsetDateTime.now())
+        .path(request.getDescription(false))
+        .status(HttpStatus.METHOD_NOT_ALLOWED.value())
+        .error(e.getClass().getSimpleName())
+        .message(e.getMessage())
+        .build();
+    
     log.warn("Exception: {}", convertToJson(response));
     return response;
   }
@@ -99,64 +114,48 @@ public class GlobalControllerAdvice {
   @ExceptionHandler(MethodArgumentTypeMismatchException.class)
   @ResponseStatus(HttpStatus.BAD_REQUEST)
   public ExceptionResponseBody handle(MethodArgumentTypeMismatchException e, WebRequest request) {
+    Throwable cause = e.getMostSpecificCause();
+    String error = cause.getClass().getSimpleName();
+    String message = cause.getLocalizedMessage();
     ExceptionResponseBody response = ExceptionResponseBody.builder()
         .timestamp(OffsetDateTime.now())
         .path(request.getDescription(false))
         .status(HttpStatus.BAD_REQUEST.value())
-        .error(e.getErrorCode())
-        .message(e.getRootCause().getMessage())
+        .error(error)
+        .message(message)
         .build();
 
     log.warn("Exception: {}", convertToJson(response));
     return response;
   }
-
-  // @ExceptionHandler(MethodArgumentNotValidException.class)
+  
+  @ExceptionHandler(HttpMessageNotReadableException.class)
   @ResponseStatus(HttpStatus.BAD_REQUEST)
-  public ExceptionResponseBody handle(MethodArgumentNotValidException e, WebRequest request) {
+  public ExceptionResponseBody handle(HttpMessageNotReadableException e, WebRequest request) {
+    final String requiredBodyMessage = "Required request body is missing";
+    
+    Throwable cause = e.getMostSpecificCause();
+    String error = cause.getClass().getSimpleName();
+    String message = cause.getLocalizedMessage();
+    if (cause instanceof JsonProcessingException) {
+      message = ((JsonProcessingException) cause).getOriginalMessage();
+    } else
+    if (message.startsWith(requiredBodyMessage)) {
+      message = requiredBodyMessage;
+    }
+    
     ExceptionResponseBody response = ExceptionResponseBody.builder()
         .timestamp(OffsetDateTime.now())
         .path(request.getDescription(false))
         .status(HttpStatus.BAD_REQUEST.value())
-        .error(e.getClass().getSimpleName())
-        .message(e.getMessage())
-        .detail(e.getBindingResult().getAllErrors())
+        .error(error)
+        .message(message)
         .build();
-
+    
     log.warn("Exception: {}", convertToJson(response));
     return response;
   }
-
-  // @ExceptionHandler(InvalidFormatException.class)
-  @ResponseStatus(HttpStatus.BAD_REQUEST)
-  public ExceptionResponseBody handle(InvalidFormatException e, WebRequest request) {
-    ExceptionResponseBody response = ExceptionResponseBody.builder()
-        .timestamp(OffsetDateTime.now())
-        .path(request.getDescription(false))
-        .status(HttpStatus.BAD_REQUEST.value())
-        .error(e.getClass().getSimpleName())
-        .message(e.getMessage())
-        .build();
-
-    log.warn("Exception: {}", convertToJson(response));
-    return response;
-  }
-
-  // @ExceptionHandler(JsonParseException.class)
-  @ResponseStatus(HttpStatus.BAD_REQUEST)
-  public ExceptionResponseBody handle(JsonParseException e, WebRequest request) {
-    ExceptionResponseBody response = ExceptionResponseBody.builder()
-        .timestamp(OffsetDateTime.now())
-        .path(request.getDescription(false))
-        .status(HttpStatus.BAD_REQUEST.value())
-        .error(e.getClass().getSimpleName())
-        .message(e.getMessage())
-        .build();
-
-    log.warn("Exception: {}", convertToJson(response));
-    return response;
-  }
-
+  
   private String convertToJson(Object object) {
     try {
       return objectMapper.writeValueAsString(object);
