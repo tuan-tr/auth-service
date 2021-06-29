@@ -7,7 +7,7 @@ import lombok.Value;
 @Value
 public class UserCriteria {
   
-  @Size(max=100)
+  @Size(min=1, max=100)
   private String keyword;
   
   private Boolean enabled;
