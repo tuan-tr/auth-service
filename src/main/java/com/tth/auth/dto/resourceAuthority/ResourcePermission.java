@@ -2,6 +2,9 @@ package com.tth.auth.dto.resourceAuthority;
 
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -21,6 +24,12 @@ public enum ResourcePermission {
 
   int code;
   
+  public static List<ResourcePermission> revert(int permissions) {
+    return Stream.of(ResourcePermission.values())
+        .filter(value -> (permissions & value.getCode()) == value.getCode())
+        .collect(Collectors.toList());
+  }
+  
   public static int sum(Collection<ResourcePermission> permissions) {
     return permissions.stream()
         .mapToInt(ResourcePermission::getCode)
@@ -32,5 +41,23 @@ public enum ResourcePermission {
         .mapToInt(ResourcePermission::getCode)
         .sum();
   }
-
+  
+  public static int add(int permission, Collection<ResourcePermission> newPermissions) {
+    for (ResourcePermission newPermission : newPermissions) {
+      if ((permission & newPermission.getCode()) == 0) {
+        permission += newPermission.getCode();
+      }
+    }
+    return permission;
+  }
+  
+  public static int subtract(int permission, Collection<ResourcePermission> removePermissions) {
+    for (ResourcePermission removePermission : removePermissions) {
+      if ((permission & removePermission.getCode()) == removePermission.getCode()) {
+        permission -= removePermission.getCode();
+      }
+    }
+    return permission;
+  }
+  
 }
