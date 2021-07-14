@@ -104,7 +104,7 @@ public class GroupService {
     
     List<UUID> readableGroupIds = null;
     if (hasReadPermissionOnAllGroup == false) {
-      readableGroupIds = resourceAuthorityService.findAuthorizedResourceUUIDs(readCredential);
+      readableGroupIds = resourceAuthorityService.getAuthorizedResourceUUIDs(readCredential);
       if (CollectionUtils.isEmpty(readableGroupIds)) {
         return Page.empty();
       }

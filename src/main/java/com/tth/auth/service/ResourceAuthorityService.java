@@ -72,7 +72,7 @@ public class ResourceAuthorityService {
     return hasPermission;
   }
   
-  public List<String> findAuthorizedResourceIds(ResourceAccessCredential credential) {
+  public List<String> getAuthorizedResourceIds(ResourceAccessCredential credential) {
     int permissions = ResourcePermission.sum(credential.getPermissions());
     List<String> resourceIds = resourceAuthorityRepository.findResourceIdsByTargets(
           credential.getResourceType().toString(), 
@@ -81,8 +81,8 @@ public class ResourceAuthorityService {
     return resourceIds;
   }
   
-  public List<UUID> findAuthorizedResourceUUIDs(ResourceAccessCredential credential) {
-    List<UUID> resourceIds = this.findAuthorizedResourceIds(credential).stream()
+  public List<UUID> getAuthorizedResourceUUIDs(ResourceAccessCredential credential) {
+    List<UUID> resourceIds = this.getAuthorizedResourceIds(credential).stream()
         .map(UUID::fromString)
         .collect(Collectors.toList());
     return resourceIds;

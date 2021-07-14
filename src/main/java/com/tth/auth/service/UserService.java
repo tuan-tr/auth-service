@@ -155,7 +155,7 @@ public class UserService implements UserDetailsService {
     
     List<UUID> readableUserIds = null;
     if (hasReadPermissionOnAllUser == false) {
-      readableUserIds = resourceAuthorityService.findAuthorizedResourceUUIDs(readCredential);
+      readableUserIds = resourceAuthorityService.getAuthorizedResourceUUIDs(readCredential);
       if (CollectionUtils.isEmpty(readableUserIds)) {
         return Page.empty();
       }
