@@ -13,7 +13,6 @@ import lombok.Getter;
 @AllArgsConstructor
 public enum ResourcePermission {
 
-  ALL(Integer.MAX_VALUE),
   GRANT_PERMISSION(1),
   CREATE(2),
   READ(4),

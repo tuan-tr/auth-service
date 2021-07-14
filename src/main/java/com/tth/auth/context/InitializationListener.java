@@ -5,7 +5,6 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import com.tth.auth.configuration.setting.UserSetting;
-import com.tth.auth.dto.resourceAuthority.ResourcePermission;
 import com.tth.auth.dto.resourceAuthority.ResourceType;
 import com.tth.auth.entity.ResourceAuthority;
 import com.tth.auth.entity.User;
@@ -68,7 +67,7 @@ public class InitializationListener implements ApplicationListener<ApplicationRe
             .targetType(ResourceType.USER)
             .targetId(adminUser.getId())
             .resourceType(resourceType)
-            .permissions(ResourcePermission.ALL.getCode())
+            .permissions(Integer.MAX_VALUE)
             .modifiedBy(adminUser)
             .build())
         .collect(Collectors.toList());
