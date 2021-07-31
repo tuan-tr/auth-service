@@ -7,8 +7,8 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 import com.tth.auth.configuration.security.annotation.ResourceAuthentication.ResourceAuthentications;
-import com.tth.auth.dto.resourceAuthority.ResourcePermission;
-import com.tth.auth.dto.resourceAuthority.ResourceType;
+import com.tth.auth.constant.ResourcePermission;
+import com.tth.auth.constant.ResourceType;
 
 @Target(ElementType.METHOD)
 @Retention(RetentionPolicy.RUNTIME)

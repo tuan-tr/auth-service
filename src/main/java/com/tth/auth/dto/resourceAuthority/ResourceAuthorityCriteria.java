@@ -5,6 +5,9 @@ import java.util.UUID;
 
 import javax.validation.constraints.AssertTrue;
 
+import com.tth.auth.constant.ResourcePermission;
+import com.tth.auth.constant.ResourceType;
+
 import lombok.Value;
 
 @Value

@@ -3,8 +3,8 @@ package com.tth.auth.exception;
 import java.util.Collection;
 import java.util.HashMap;
 
-import com.tth.auth.dto.resourceAuthority.ResourcePermission;
-import com.tth.auth.dto.resourceAuthority.ResourceType;
+import com.tth.auth.constant.ResourcePermission;
+import com.tth.auth.constant.ResourceType;
 
 import org.springframework.http.HttpStatus;
 

@@ -5,7 +5,7 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import com.tth.auth.configuration.setting.UserSetting;
-import com.tth.auth.dto.resourceAuthority.ResourceType;
+import com.tth.auth.constant.ResourceType;
 import com.tth.auth.entity.ResourceAuthority;
 import com.tth.auth.entity.User;
 import com.tth.auth.repository.ResourceAuthorityRepository;
@@ -43,6 +43,8 @@ public class InitializationListener implements ApplicationListener<ApplicationRe
   }
 
   private void initAdminUser() {
+    int allPermission = Integer.MAX_VALUE;
+    
     boolean adminUserExisted = userRepository.findByUsername(
         adminUserSetting.getUsername())
             .isPresent();
@@ -67,7 +69,7 @@ public class InitializationListener implements ApplicationListener<ApplicationRe
             .targetType(ResourceType.USER)
             .targetId(adminUser.getId())
             .resourceType(resourceType)
-            .permissions(Integer.MAX_VALUE)
+            .permissions(allPermission)
             .modifiedBy(adminUser)
             .build())
         .collect(Collectors.toList());

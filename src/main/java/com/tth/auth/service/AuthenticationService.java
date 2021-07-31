@@ -2,11 +2,11 @@ package com.tth.auth.service;
 
 import com.tth.auth.configuration.security.token.TokenProvider;
 import com.tth.auth.configuration.security.user.UserAuthority;
+import com.tth.auth.constant.ResourcePermission;
+import com.tth.auth.constant.ResourceType;
 import com.tth.auth.dto.authentication.Credentials;
 import com.tth.auth.dto.authentication.SigninRequest;
 import com.tth.auth.dto.authentication.SignupRequest;
-import com.tth.auth.dto.resourceAuthority.ResourcePermission;
-import com.tth.auth.dto.resourceAuthority.ResourceType;
 import com.tth.auth.dto.user.UserDTO;
 import com.tth.auth.entity.ResourceAuthority;
 import com.tth.auth.entity.User;

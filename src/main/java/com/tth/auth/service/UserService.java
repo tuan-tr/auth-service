@@ -5,10 +5,10 @@ import java.util.List;
 import java.util.UUID;
 
 import com.tth.auth.configuration.security.user.UserAuthority;
+import com.tth.auth.constant.ResourcePermission;
+import com.tth.auth.constant.ResourceType;
 import com.tth.auth.dto.personalInformation.PersonalInformationInput;
 import com.tth.auth.dto.resourceAuthority.ResourceAccessCredential;
-import com.tth.auth.dto.resourceAuthority.ResourcePermission;
-import com.tth.auth.dto.resourceAuthority.ResourceType;
 import com.tth.auth.dto.user.UserCriteria;
 import com.tth.auth.dto.user.UserDTO;
 import com.tth.auth.dto.user.UserInfor;

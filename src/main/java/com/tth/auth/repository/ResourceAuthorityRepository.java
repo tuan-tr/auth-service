@@ -8,8 +8,8 @@ import java.util.UUID;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 
+import com.tth.auth.constant.ResourceType;
 import com.tth.auth.dto.resourceAuthority.ResourceAuthorityData;
-import com.tth.auth.dto.resourceAuthority.ResourceType;
 import com.tth.auth.entity.ResourceAuthority;
 import com.tth.auth.repository.custom.CustomResourceAuthorityRepository;
 

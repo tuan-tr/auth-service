@@ -3,6 +3,9 @@ package com.tth.auth.dto.resourceAuthority;
 import java.util.Collection;
 import java.util.UUID;
 
+import com.tth.auth.constant.ResourcePermission;
+import com.tth.auth.constant.ResourceType;
+
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;

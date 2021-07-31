@@ -6,8 +6,8 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
 
-import com.tth.auth.dto.resourceAuthority.ResourcePermission;
-import com.tth.auth.dto.resourceAuthority.ResourceType;
+import com.tth.auth.constant.ResourcePermission;
+import com.tth.auth.constant.ResourceType;
 import com.tth.auth.entity.ResourceAuthority;
 import com.tth.auth.repository.ResourceAuthorityRepository;
 

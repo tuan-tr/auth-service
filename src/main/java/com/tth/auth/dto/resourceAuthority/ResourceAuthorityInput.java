@@ -7,6 +7,9 @@ import javax.validation.constraints.AssertTrue;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 
+import com.tth.auth.constant.ResourcePermission;
+import com.tth.auth.constant.ResourceType;
+
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 

@@ -5,14 +5,14 @@ import java.util.UUID;
 import javax.validation.Valid;
 
 import com.tth.auth.configuration.security.annotation.ResourceAuthentication;
+import com.tth.auth.constant.ResourcePermission;
+import com.tth.auth.constant.ResourceType;
 import com.tth.auth.dto.group.GroupCriteria;
 import com.tth.auth.dto.group.GroupDTO;
 import com.tth.auth.dto.group.GroupData;
 import com.tth.auth.dto.group.GroupInput;
 import com.tth.auth.dto.group.GroupMemberCriteria;
 import com.tth.auth.dto.group.GroupMemberData;
-import com.tth.auth.dto.resourceAuthority.ResourcePermission;
-import com.tth.auth.dto.resourceAuthority.ResourceType;
 import com.tth.auth.service.GroupService;
 
 import org.springframework.beans.factory.annotation.Autowired;

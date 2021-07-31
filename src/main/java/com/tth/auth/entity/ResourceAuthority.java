@@ -13,7 +13,7 @@ import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
-import com.tth.auth.dto.resourceAuthority.ResourceType;
+import com.tth.auth.constant.ResourceType;
 import com.tth.auth.entity.audit.ShortAuditEntity;
 
 import org.hibernate.annotations.JoinFormula;

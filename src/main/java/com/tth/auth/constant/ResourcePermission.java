@@ -1,4 +1,4 @@
-package com.tth.auth.dto.resourceAuthority;
+package com.tth.auth.constant;
 
 import java.util.Arrays;
 import java.util.Collection;

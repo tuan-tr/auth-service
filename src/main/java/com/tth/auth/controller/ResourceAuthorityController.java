@@ -5,11 +5,11 @@ import java.util.List;
 import javax.validation.Valid;
 
 import com.tth.auth.configuration.security.user.UserAuthority;
+import com.tth.auth.constant.ResourcePermission;
 import com.tth.auth.dto.resourceAuthority.ResourceAccessCredential;
 import com.tth.auth.dto.resourceAuthority.ResourceAuthorityCriteria;
 import com.tth.auth.dto.resourceAuthority.ResourceAuthorityData;
 import com.tth.auth.dto.resourceAuthority.ResourceAuthorityInput;
-import com.tth.auth.dto.resourceAuthority.ResourcePermission;
 import com.tth.auth.service.ResourceAuthorityService;
 import com.tth.auth.utils.CurrentUserContext;
 
