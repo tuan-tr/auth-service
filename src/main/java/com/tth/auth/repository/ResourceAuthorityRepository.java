@@ -4,6 +4,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 
@@ -35,7 +36,7 @@ public interface ResourceAuthorityRepository extends JpaRepository<ResourceAutho
   + "AND bitwise_and(permissions, :permissions) = :permissions ")
   List<ResourceAuthority> findOnSpecificResource(
       @Param("resourceType") @NotNull ResourceType resourceType,
-      @Param("resourceId") @NotNull String resourceId,
+      @Param("resourceId") @NotBlank String resourceId,
       @Param("targetIds") @NotEmpty Collection<String> targetIds,
       @Param("permissions") @NotNull int permissions,
       Pageable pageable);
@@ -58,7 +59,7 @@ public interface ResourceAuthorityRepository extends JpaRepository<ResourceAutho
   + "AND target_id IN (:targetIds) "
   + "AND permissions & :permissions = :permissions ")
   List<String> findResourceIdsByTargets(
-      @Param("resourceType") @NotNull String resourceType,
+      @Param("resourceType") @NotBlank String resourceType,
       @Param("targetIds") @NotEmpty Collection<String> targetIds,
       @Param("permissions") @NotNull int permissions);
 
@@ -71,7 +72,7 @@ public interface ResourceAuthorityRepository extends JpaRepository<ResourceAutho
   + "  OR ra.resourceId = :resourceId) ")
   Optional<ResourceAuthority> findOne(
       @Param("targetType") @NotNull ResourceType targetType,
-      @Param("targetId") @NotNull String targetId,
+      @Param("targetId") @NotBlank String targetId,
       @Param("resourceType") @NotNull ResourceType resourceType,
       @Param("resourceId") String resourceId);
   

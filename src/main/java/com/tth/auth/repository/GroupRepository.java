@@ -3,6 +3,7 @@ package com.tth.auth.repository;
 import java.util.Collection;
 import java.util.Optional;
 
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
 import com.tth.auth.entity.Group;
@@ -22,7 +23,7 @@ public interface GroupRepository extends JpaRepository<Group, String> {
     "SELECT gr FROM Group gr "
   + "WHERE gr.id = :id ")
   @EntityGraph(attributePaths = {"createdBy", "createdBy.personalInformation"})
-  <T> Optional<T> findDataById(@Param("id") @NotNull String id, @NotNull Class<T> type);
+  <T> Optional<T> findDataById(@Param("id") @NotBlank String id, @NotNull Class<T> type);
   
   @Query(value =
     "SELECT gr FROM Group gr "

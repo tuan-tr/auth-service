@@ -26,13 +26,13 @@ public interface UserRepository extends JpaRepository<User, String> {
   + "WHERE us.id = :id "
   + "AND us.rootUser = false ")
   @EntityGraph(attributePaths = {"personalInformation"})
-  <T> Optional<T> findNonRootInforById(@Param("id") @NotNull String id, @NotNull Class<T> type);
+  <T> Optional<T> findNonRootInforById(@Param("id") @NotBlank String id, @NotNull Class<T> type);
   
   @Query(value =
     "SELECT us FROM User us "
   + "WHERE us.id = :id ")
   @EntityGraph(attributePaths = {"personalInformation"})
-  <T> Optional<T> findInforById(@Param("id") @NotNull String id, @NotNull Class<T> type);
+  <T> Optional<T> findInforById(@Param("id") @NotBlank String id, @NotNull Class<T> type);
   
   @Query(value =
     "SELECT us FROM User us "
