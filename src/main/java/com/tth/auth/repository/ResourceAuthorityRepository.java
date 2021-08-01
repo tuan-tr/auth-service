@@ -3,7 +3,6 @@ package com.tth.auth.repository;
 import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
-import java.util.UUID;
 
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
@@ -22,9 +21,9 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.validation.annotation.Validated;
 
 @Validated
-public interface ResourceAuthorityRepository extends JpaRepository<ResourceAuthority, UUID>, CustomResourceAuthorityRepository {
+public interface ResourceAuthorityRepository extends JpaRepository<ResourceAuthority, String>, CustomResourceAuthorityRepository {
   
-  long deleteByTargetTypeAndTargetId(ResourceType targetType, UUID targetId);
+  long deleteByTargetTypeAndTargetId(ResourceType targetType, String targetId);
   
   long deleteByResourceTypeAndResourceId(ResourceType resourceType, String resourceId);
   
@@ -37,7 +36,7 @@ public interface ResourceAuthorityRepository extends JpaRepository<ResourceAutho
   List<ResourceAuthority> findOnSpecificResource(
       @Param("resourceType") @NotNull ResourceType resourceType,
       @Param("resourceId") @NotNull String resourceId,
-      @Param("targetIds") @NotEmpty Collection<UUID> targetIds,
+      @Param("targetIds") @NotEmpty Collection<String> targetIds,
       @Param("permissions") @NotNull int permissions,
       Pageable pageable);
 
@@ -49,7 +48,7 @@ public interface ResourceAuthorityRepository extends JpaRepository<ResourceAutho
   + "AND bitwise_and(permissions, :permissions) = :permissions ")
   List<ResourceAuthority> findOnResourceType(
       @Param("resourceType") @NotNull ResourceType resourceType,
-      @Param("targetIds") @NotEmpty Collection<UUID> targetIds,
+      @Param("targetIds") @NotEmpty Collection<String> targetIds,
       @Param("permissions") @NotNull int permissions,
       Pageable pageable);
   
@@ -60,7 +59,7 @@ public interface ResourceAuthorityRepository extends JpaRepository<ResourceAutho
   + "AND permissions & :permissions = :permissions ")
   List<String> findResourceIdsByTargets(
       @Param("resourceType") @NotNull String resourceType,
-      @Param("targetIds") @NotEmpty Collection<UUID> targetIds,
+      @Param("targetIds") @NotEmpty Collection<String> targetIds,
       @Param("permissions") @NotNull int permissions);
 
   @Query(value =
@@ -72,7 +71,7 @@ public interface ResourceAuthorityRepository extends JpaRepository<ResourceAutho
   + "  OR ra.resourceId = :resourceId) ")
   Optional<ResourceAuthority> findOne(
       @Param("targetType") @NotNull ResourceType targetType,
-      @Param("targetId") @NotNull UUID targetId,
+      @Param("targetId") @NotNull String targetId,
       @Param("resourceType") @NotNull ResourceType resourceType,
       @Param("resourceId") String resourceId);
   
@@ -89,9 +88,9 @@ public interface ResourceAuthorityRepository extends JpaRepository<ResourceAutho
       "resourceUser", "resourceUser.personalInformation", "resourceGroup",
       "modifiedBy", "modifiedBy.personalInformation"})
   List<ResourceAuthorityData> findList(
-      @Param("ids") @NotEmpty Collection<UUID> ids,
+      @Param("ids") @NotEmpty Collection<String> ids,
       @Param("targetType") ResourceType targetType,
-      @Param("targetId") UUID targetId,
+      @Param("targetId") String targetId,
       @Param("resourceType") ResourceType resourceType,
       @Param("resourceId") String resourceId,
       @Param("permissions") Integer permissions,

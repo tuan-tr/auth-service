@@ -2,7 +2,6 @@ package com.tth.auth.dto.resourceAuthority;
 
 import java.time.OffsetDateTime;
 import java.util.List;
-import java.util.UUID;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -36,7 +35,7 @@ public interface ResourceAuthorityData {
   }
   
   interface User {
-    UUID getId();
+    String getId();
     Boolean getEnabled();
     PersonalInformation getPersonalInformation();
     
@@ -47,7 +46,7 @@ public interface ResourceAuthorityData {
   }
   
   interface Group {
-    UUID getId();
+    String getId();
     String getName();
     Boolean getEnabled();
   }

@@ -1,7 +1,5 @@
 package com.tth.auth.entity;
 
-import java.util.UUID;
-
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -16,6 +14,7 @@ import javax.persistence.Table;
 
 import com.tth.auth.entity.audit.FullAuditEntity;
 
+import org.hibernate.annotations.GenericGenerator;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import lombok.AccessLevel;
@@ -26,7 +25,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Entity
-@Table(name = "tth_user")
+@Table(name = "_user")
 @EntityListeners(AuditingEntityListener.class)
 @Getter
 @Setter
@@ -36,8 +35,9 @@ import lombok.Setter;
 public class User extends FullAuditEntity {
 
   @Id
-  @GeneratedValue(strategy = GenerationType.AUTO)
-  private UUID id;
+  @GeneratedValue(generator = "nanoid-generator", strategy = GenerationType.IDENTITY)
+  @GenericGenerator(name = "nanoid-generator", strategy = "com.tth.auth.configuration.jpa.NanoidGenerator")
+  private String id;
 
   @Column(updatable = false)
   private String username;

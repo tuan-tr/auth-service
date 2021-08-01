@@ -1,7 +1,6 @@
 package com.tth.auth.dto.resourceAuthority;
 
 import java.util.Set;
-import java.util.UUID;
 
 import javax.validation.constraints.AssertTrue;
 
@@ -15,7 +14,7 @@ public class ResourceAuthorityCriteria {
   
   private ResourceType targetType;
   
-  private UUID targetId;
+  private String targetId;
   
   private ResourceType resourceType;
   

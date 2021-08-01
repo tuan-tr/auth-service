@@ -7,17 +7,18 @@ import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.when;
 
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
-import java.util.UUID;
 
+import com.aventrix.jnanoid.jnanoid.NanoIdUtils;
 import com.tth.auth.constant.ResourcePermission;
 import com.tth.auth.constant.ResourceType;
 import com.tth.auth.dto.resourceAuthority.ResourceAccessCredential;
 import com.tth.auth.entity.ResourceAuthority;
 import com.tth.auth.repository.ResourceAuthorityRepository;
+import com.tth.auth.service.GroupService;
 import com.tth.auth.service.ResourceAuthorityService;
+import com.tth.auth.service.UserService;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -27,8 +28,10 @@ import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.data.domain.Pageable;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
+@ActiveProfiles("test")
 @ExtendWith(SpringExtension.class)
 public class HasPermissionTest {
 
@@ -38,6 +41,12 @@ public class HasPermissionTest {
     ResourceAuthorityService resourceAuthorityService() {
       return new ResourceAuthorityService();
     }
+    
+    @MockBean
+    private UserService userService;
+    
+    @MockBean
+    private GroupService groupService;
   }
 
   @Autowired
@@ -49,13 +58,13 @@ public class HasPermissionTest {
   @Test
   public void hasPermission_false_verifyOnSpecificResource() {
     ResourceType resourceType = ResourceType.USER;
-    UUID resourceId = UUID.randomUUID();
-    List<UUID> targetIds = Arrays.asList(UUID.randomUUID());
-    List<ResourcePermission> permissions = Arrays.asList(ResourcePermission.READ);
+    String resourceId = NanoIdUtils.randomNanoId();
+    List<String> targetIds = List.of(NanoIdUtils.randomNanoId());
+    List<ResourcePermission> permissions = List.of(ResourcePermission.READ);
 
     ResourceAccessCredential credential = ResourceAccessCredential.builder()
         .resourceType(resourceType)
-        .resourceId(resourceId.toString())
+        .resourceId(resourceId)
         .targetIds(targetIds)
         .permissions(permissions)
         .build();
@@ -63,7 +72,7 @@ public class HasPermissionTest {
     when(resourceAuthorityRepository.findOnSpecificResource(
             any(ResourceType.class),
             anyString(),
-            ArgumentMatchers.<UUID>anyList(),
+            ArgumentMatchers.<String>anyList(),
             anyInt(),
             any(Pageable.class))
         ).thenReturn(Collections.emptyList());
@@ -75,13 +84,13 @@ public class HasPermissionTest {
   @Test
   public void hasPermission_true_verifyOnSpecificResource() {
     ResourceType resourceType = ResourceType.USER;
-    UUID resourceId = UUID.randomUUID();
-    List<UUID> targetIds = Arrays.asList(UUID.randomUUID());
-    List<ResourcePermission> permissions = Arrays.asList(ResourcePermission.READ);
+    String resourceId = NanoIdUtils.randomNanoId();
+    List<String> targetIds = List.of(NanoIdUtils.randomNanoId());
+    List<ResourcePermission> permissions = List.of(ResourcePermission.READ);
 
     ResourceAccessCredential credential = ResourceAccessCredential.builder()
         .resourceType(resourceType)
-        .resourceId(resourceId.toString())
+        .resourceId(resourceId)
         .targetIds(targetIds)
         .permissions(permissions)
         .build();
@@ -89,10 +98,10 @@ public class HasPermissionTest {
     when(resourceAuthorityRepository.findOnSpecificResource(
             any(ResourceType.class),
             anyString(),
-            ArgumentMatchers.<UUID>anyList(),
+            ArgumentMatchers.<String>anyList(),
             anyInt(),
             any(Pageable.class))
-        ).thenReturn(Arrays.asList(new ResourceAuthority()));
+        ).thenReturn(List.of(new ResourceAuthority()));
 
     boolean hasPermission = resourceAuthorityService.hasPermission(credential);
     assertTrue(hasPermission);
@@ -101,8 +110,8 @@ public class HasPermissionTest {
   @Test
   public void hasPermission_false_verifyOnResourceType() {
     ResourceType resourceType = ResourceType.USER;
-    List<UUID> targetIds = Arrays.asList(UUID.randomUUID());
-    List<ResourcePermission> permissions = Arrays.asList(ResourcePermission.READ);
+    List<String> targetIds = List.of(NanoIdUtils.randomNanoId());
+    List<ResourcePermission> permissions = List.of(ResourcePermission.READ);
 
     ResourceAccessCredential credential = ResourceAccessCredential.builder()
         .resourceType(resourceType)
@@ -112,7 +121,7 @@ public class HasPermissionTest {
 
     when(resourceAuthorityRepository.findOnResourceType(
             any(ResourceType.class),
-            ArgumentMatchers.<UUID>anyList(),
+            ArgumentMatchers.<String>anyList(),
             anyInt(),
             any(Pageable.class))
         ).thenReturn(Collections.emptyList());
@@ -124,8 +133,8 @@ public class HasPermissionTest {
   @Test
   public void hasPermission_true_verifyOnResourceType() {
     ResourceType resourceType = ResourceType.USER;
-    List<UUID> targetIds = Arrays.asList(UUID.randomUUID());
-    List<ResourcePermission> permissions = Arrays.asList(ResourcePermission.READ);
+    List<String> targetIds = List.of(NanoIdUtils.randomNanoId());
+    List<ResourcePermission> permissions = List.of(ResourcePermission.READ);
 
     ResourceAccessCredential credential = ResourceAccessCredential.builder()
         .resourceType(resourceType)
@@ -135,10 +144,10 @@ public class HasPermissionTest {
 
     when(resourceAuthorityRepository.findOnResourceType(
             any(ResourceType.class),
-            ArgumentMatchers.<UUID>anyList(),
+            ArgumentMatchers.<String>anyList(),
             anyInt(),
             any(Pageable.class))
-        ).thenReturn(Arrays.asList(new ResourceAuthority()));
+        ).thenReturn(List.of(new ResourceAuthority()));
 
     boolean hasPermission = resourceAuthorityService.hasPermission(credential);
     assertTrue(hasPermission);

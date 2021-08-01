@@ -2,7 +2,6 @@ package com.tth.auth.repository;
 
 import java.util.Collection;
 import java.util.Optional;
-import java.util.UUID;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
@@ -18,7 +17,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.validation.annotation.Validated;
 
 @Validated
-public interface UserRepository extends JpaRepository<User, UUID> {
+public interface UserRepository extends JpaRepository<User, String> {
 
   Optional<User> findByUsername(@NotBlank String username);
   
@@ -27,13 +26,13 @@ public interface UserRepository extends JpaRepository<User, UUID> {
   + "WHERE us.id = :id "
   + "AND us.rootUser = false ")
   @EntityGraph(attributePaths = {"personalInformation"})
-  <T> Optional<T> findNonRootInforById(@Param("id") @NotNull UUID id, @NotNull Class<T> type);
+  <T> Optional<T> findNonRootInforById(@Param("id") @NotNull String id, @NotNull Class<T> type);
   
   @Query(value =
     "SELECT us FROM User us "
   + "WHERE us.id = :id ")
   @EntityGraph(attributePaths = {"personalInformation"})
-  <T> Optional<T> findInforById(@Param("id") @NotNull UUID id, @NotNull Class<T> type);
+  <T> Optional<T> findInforById(@Param("id") @NotNull String id, @NotNull Class<T> type);
   
   @Query(value =
     "SELECT us FROM User us "
@@ -45,7 +44,7 @@ public interface UserRepository extends JpaRepository<User, UUID> {
   + "  OR CONCAT(pi.lastName, ' ', pi.firstName) LIKE %:keyword%) ")
   @EntityGraph(attributePaths = {"personalInformation"})
   <T> Page<T> findList(
-      @Param("ids") Collection<UUID> ids,
+      @Param("ids") Collection<String> ids,
       @Param("enabled") Boolean enabled,
       @Param("keyword") String keyword,
       @Param("gender") Boolean gender,

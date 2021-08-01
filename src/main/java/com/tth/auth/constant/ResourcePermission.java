@@ -1,6 +1,5 @@
 package com.tth.auth.constant;
 
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -36,7 +35,7 @@ public enum ResourcePermission {
   }
   
   public static int sum(ResourcePermission... permissions) {
-    return Arrays.asList(permissions).stream()
+    return List.of(permissions).stream()
         .mapToInt(ResourcePermission::getCode)
         .sum();
   }

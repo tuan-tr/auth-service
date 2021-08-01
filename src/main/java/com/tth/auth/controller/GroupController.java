@@ -1,7 +1,5 @@
 package com.tth.auth.controller;
 
-import java.util.UUID;
-
 import javax.validation.Valid;
 
 import com.tth.auth.configuration.security.annotation.ResourceAuthentication;
@@ -53,7 +51,7 @@ public class GroupController {
   @ResourceAuthentication(resourceType = ResourceType.GROUP,
       permissions = ResourcePermission.READ,
       resourceId = "args[0]")
-  public GroupData getDataById(@PathVariable("id") UUID id) {
+  public GroupData getDataById(@PathVariable("id") String id) {
     return groupService.getDataById(id);
   }
   
@@ -67,7 +65,7 @@ public class GroupController {
   @ResourceAuthentication(resourceType = ResourceType.GROUP,
       permissions = ResourcePermission.UPDATE,
       resourceId = "args[0]")
-  public void update(@PathVariable("id") UUID id,
+  public void update(@PathVariable("id") String id,
       @RequestBody @Valid GroupInput input
   ) {
     groupService.update(id, input);
@@ -78,7 +76,7 @@ public class GroupController {
   @ResourceAuthentication(resourceType = ResourceType.GROUP,
       permissions = ResourcePermission.ENABLE,
       resourceId = "args[0]")
-  public void enable(@PathVariable("id") UUID id,
+  public void enable(@PathVariable("id") String id,
       @PathVariable("enabled") boolean enabled
   ) {
     groupService.enable(id, enabled);
@@ -89,7 +87,7 @@ public class GroupController {
   @ResourceAuthentication(resourceType = ResourceType.GROUP,
       permissions = ResourcePermission.DELETE,
       resourceId = "args[0]")
-  public void delete(@PathVariable("id") UUID id) {
+  public void delete(@PathVariable("id") String id) {
     groupService.delete(id);
   }
   
@@ -101,8 +99,8 @@ public class GroupController {
   @ResourceAuthentication(resourceType = ResourceType.USER,
       permissions = ResourcePermission.READ,
       resourceId = "args[1]")
-  public void addMember(@PathVariable("groupId") UUID groupId,
-      @PathVariable("userId") UUID userId
+  public void addMember(@PathVariable("groupId") String groupId,
+      @PathVariable("userId") String userId
   ) {
     groupService.addMember(groupId, userId);
   }
@@ -115,8 +113,8 @@ public class GroupController {
   @ResourceAuthentication(resourceType = ResourceType.USER,
       permissions = ResourcePermission.READ,
       resourceId = "args[1]")
-  public void removeMember(@PathVariable("groupId") UUID groupId,
-      @PathVariable("userId") UUID userId
+  public void removeMember(@PathVariable("groupId") String groupId,
+      @PathVariable("userId") String userId
   ) {
     groupService.removeMember(groupId, userId);
   }
@@ -125,7 +123,7 @@ public class GroupController {
   @ResourceAuthentication(resourceType = ResourceType.GROUP,
       permissions = ResourcePermission.READ,
       resourceId = "args[0]")
-  public Page<GroupMemberData> getMembers(@PathVariable("id") UUID groupId,
+  public Page<GroupMemberData> getMembers(@PathVariable("id") String groupId,
       @Valid GroupMemberCriteria criteria, Pageable pageable
   ) {
     return groupService.getMembers(groupId, criteria, pageable);

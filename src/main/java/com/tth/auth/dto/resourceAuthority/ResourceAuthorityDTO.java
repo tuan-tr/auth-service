@@ -1,7 +1,6 @@
 package com.tth.auth.dto.resourceAuthority;
 
 import java.util.List;
-import java.util.UUID;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
@@ -20,7 +19,7 @@ import lombok.NoArgsConstructor;
 @JsonInclude(value = Include.NON_NULL)
 public class ResourceAuthorityDTO {
   
-  private UUID id;
+  private String id;
   
   private ResourceType targetType;
   

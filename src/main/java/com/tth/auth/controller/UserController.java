@@ -1,7 +1,5 @@
 package com.tth.auth.controller;
 
-import java.util.UUID;
-
 import javax.validation.Valid;
 
 import com.tth.auth.configuration.security.annotation.ResourceAuthentication;
@@ -32,7 +30,7 @@ import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 @RestController
 @Validated
 @SecurityRequirement(name = "bearerAuth")
-@RequestMapping(value = "/user")
+@RequestMapping(value = "user")
 public class UserController {
   
   @Autowired
@@ -46,11 +44,11 @@ public class UserController {
     return userService.create(input);
   }
   
-  @GetMapping("/{id}")
+  @GetMapping("{id}")
   @ResourceAuthentication(resourceType = ResourceType.USER,
       permissions = ResourcePermission.READ,
       resourceId = "args[0]")
-  public UserInfor getInforById(@PathVariable("id") UUID id) {
+  public UserInfor getInforById(@PathVariable("id") String id) {
     return userService.getInforById(id);
   }
   
@@ -59,12 +57,12 @@ public class UserController {
     return userService.getList(criteria, pageable);
   }
   
-  @PutMapping("/{id}/enabled/{enabled}")
+  @PutMapping("{id}/enabled/{enabled}")
   @ResponseStatus(HttpStatus.NO_CONTENT)
   @ResourceAuthentication(resourceType = ResourceType.USER,
       permissions = ResourcePermission.ENABLE,
       resourceId = "args[0]")
-  public void enable(@PathVariable("id") UUID id,
+  public void enable(@PathVariable("id") String id,
       @PathVariable("enabled") boolean enabled
   ) {
     userService.enable(id, enabled);

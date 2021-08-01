@@ -2,7 +2,6 @@ package com.tth.auth.repository;
 
 import java.util.Collection;
 import java.util.Optional;
-import java.util.UUID;
 
 import javax.validation.constraints.NotNull;
 
@@ -17,13 +16,13 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.validation.annotation.Validated;
 
 @Validated
-public interface GroupRepository extends JpaRepository<Group, UUID> {
+public interface GroupRepository extends JpaRepository<Group, String> {
   
   @Query(value =
     "SELECT gr FROM Group gr "
   + "WHERE gr.id = :id ")
   @EntityGraph(attributePaths = {"createdBy", "createdBy.personalInformation"})
-  <T> Optional<T> findDataById(@Param("id") @NotNull UUID id, @NotNull Class<T> type);
+  <T> Optional<T> findDataById(@Param("id") @NotNull String id, @NotNull Class<T> type);
   
   @Query(value =
     "SELECT gr FROM Group gr "
@@ -32,7 +31,7 @@ public interface GroupRepository extends JpaRepository<Group, UUID> {
   + "AND (:keyword IS NULL OR gr.name LIKE %:keyword%) ")
   @EntityGraph(attributePaths = {"createdBy", "createdBy.personalInformation"})
   <T> Page<T> findList(
-      @Param("ids") Collection<UUID> ids,
+      @Param("ids") Collection<String> ids,
       @Param("enabled") Boolean enabled,
       @Param("keyword") String keyword,
       Pageable pageable,

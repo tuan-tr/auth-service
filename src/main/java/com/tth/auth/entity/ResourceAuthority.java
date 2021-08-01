@@ -1,7 +1,5 @@
 package com.tth.auth.entity;
 
-import java.util.UUID;
-
 import javax.persistence.Entity;
 import javax.persistence.EntityListeners;
 import javax.persistence.EnumType;
@@ -16,6 +14,7 @@ import javax.persistence.Table;
 import com.tth.auth.constant.ResourceType;
 import com.tth.auth.entity.audit.ShortAuditEntity;
 
+import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.JoinFormula;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
@@ -25,7 +24,7 @@ import lombok.Setter;
 import lombok.experimental.SuperBuilder;
 
 @Entity
-@Table(name = "resource_authority")
+@Table
 @EntityListeners(AuditingEntityListener.class)
 @Getter
 @Setter
@@ -34,13 +33,14 @@ import lombok.experimental.SuperBuilder;
 public class ResourceAuthority extends ShortAuditEntity {
 
   @Id
-  @GeneratedValue(strategy = GenerationType.AUTO)
-  private UUID id;
+  @GeneratedValue(generator = "nanoid-generator", strategy = GenerationType.IDENTITY)
+  @GenericGenerator(name = "nanoid-generator", strategy = "com.tth.auth.configuration.jpa.NanoidGenerator")
+  private String id;
 
   @Enumerated(EnumType.STRING)
   private ResourceType targetType;
 
-  private UUID targetId;
+  private String targetId;
 
   @ManyToOne(fetch = FetchType.LAZY)
   // @JoinColumn(name = "targetId", referencedColumnName = "id", 
@@ -62,12 +62,12 @@ public class ResourceAuthority extends ShortAuditEntity {
   private String resourceId;
   
   @ManyToOne(fetch = FetchType.LAZY)
-  @JoinFormula(value = "(SELECT resource_id::UUID WHERE resource_type = 'USER')", 
+  @JoinFormula(value = "(SELECT resource_id WHERE resource_type = 'USER')", 
       referencedColumnName = "id")
   private User resourceUser;
 
   @ManyToOne(fetch = FetchType.LAZY)
-  @JoinFormula(value = "(SELECT resource_id::UUID WHERE resource_type = 'GROUP')", 
+  @JoinFormula(value = "(SELECT resource_id WHERE resource_type = 'GROUP')", 
       referencedColumnName = "id")
   private Group resourceGroup;
 

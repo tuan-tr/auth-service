@@ -1,7 +1,6 @@
 package com.tth.auth.service;
 
 import java.util.List;
-import java.util.UUID;
 
 import com.tth.auth.configuration.security.user.UserAuthority;
 import com.tth.auth.constant.ResourcePermission;
@@ -24,7 +23,7 @@ import com.tth.auth.exception.group.GroupNotEmptyException;
 import com.tth.auth.repository.GroupMemberRepository;
 import com.tth.auth.repository.GroupRepository;
 import com.tth.auth.repository.ResourceAuthorityRepository;
-import com.tth.auth.utils.CurrentUserContext;
+import com.tth.auth.util.CurrentUserContext;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -52,7 +51,7 @@ public class GroupService {
   @Autowired
   private UserService userService;
   
-  public Group getById(UUID id) {
+  public Group getById(String id) {
     return groupRepository.findById(id)
         .orElseThrow(() -> new EntityNotFoundException(Group.class.getSimpleName(), id));
   }
@@ -70,7 +69,7 @@ public class GroupService {
         .targetType(ResourceType.USER)
         .targetId(currentUser.getId())
         .resourceType(ResourceType.GROUP)
-        .resourceId(group.getId().toString())
+        .resourceId(group.getId())
         .permissions(ResourcePermission.sum(ResourcePermission.READ,
             ResourcePermission.UPDATE,
             ResourcePermission.DELETE,
@@ -83,7 +82,7 @@ public class GroupService {
         .build();
   };
 
-  public GroupData getDataById(UUID id) {
+  public GroupData getDataById(String id) {
     GroupData group = groupRepository.findDataById(id, GroupData.class)
         .orElseThrow(() -> new EntityNotFoundException(Group.class.getSimpleName(), id));
     
@@ -102,9 +101,9 @@ public class GroupService {
     boolean hasReadPermissionOnAllGroup = resourceAuthorityService
         .hasPermission(readCredential);
     
-    List<UUID> readableGroupIds = null;
+    List<String> readableGroupIds = null;
     if (hasReadPermissionOnAllGroup == false) {
-      readableGroupIds = resourceAuthorityService.getAuthorizedResourceUUIDs(readCredential);
+      readableGroupIds = resourceAuthorityService.getAuthorizedResourceIds(readCredential);
       if (CollectionUtils.isEmpty(readableGroupIds)) {
         return Page.empty();
       }
@@ -118,19 +117,19 @@ public class GroupService {
   }
   
   @Transactional
-  public void update(UUID id, GroupInput input) {
+  public void update(String id, GroupInput input) {
     Group group = this.getById(id);
     group.setName(input.getName());
   }
   
   @Transactional
-  public void enable(UUID id, boolean enabled) {
+  public void enable(String id, boolean enabled) {
     Group group = this.getById(id);
     group.setEnabled(enabled);
   }
   
   @Transactional
-  public void delete(UUID id) {
+  public void delete(String id) {
     Group group = this.getById(id);
     
     int memberCount = groupMemberRepository.countByGroupId(id);
@@ -139,13 +138,13 @@ public class GroupService {
     }
     
     resourceAuthorityRepository.deleteByTargetTypeAndTargetId(ResourceType.GROUP, id);
-    resourceAuthorityRepository.deleteByResourceTypeAndResourceId(ResourceType.GROUP, id.toString());
+    resourceAuthorityRepository.deleteByResourceTypeAndResourceId(ResourceType.GROUP, id);
     
     groupRepository.delete(group);
   }
   
   @Transactional
-  public void addMember(UUID groupId, UUID userId) {
+  public void addMember(String groupId, String userId) {
     groupMemberRepository.findByGroupIdAndUserId(groupId, userId)
         .ifPresent(groupMember -> {
           throw new DuplicateGroupMemberException(groupId, userId);
@@ -162,7 +161,7 @@ public class GroupService {
   }
   
   @Transactional
-  public void removeMember(UUID groupId, UUID userId) {
+  public void removeMember(String groupId, String userId) {
     GroupMember groupMember = groupMemberRepository
         .findByGroupIdAndUserId(groupId, userId)
         .orElseThrow(() -> new GroupMemberNotFoundException(groupId, userId));
@@ -170,7 +169,7 @@ public class GroupService {
     groupMemberRepository.delete(groupMember);
   }
   
-  public Page<GroupMemberData> getMembers(UUID groupId, GroupMemberCriteria criteria, Pageable pageable) {
+  public Page<GroupMemberData> getMembers(String groupId, GroupMemberCriteria criteria, Pageable pageable) {
     return groupMemberRepository.findMembers(groupId, 
         criteria.getKeyword(),
         pageable, GroupMemberData.class);

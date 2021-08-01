@@ -1,8 +1,6 @@
 package com.tth.auth.service;
 
 import java.util.List;
-import java.util.UUID;
-import java.util.stream.Collectors;
 
 import com.tth.auth.configuration.security.user.UserAuthority;
 import com.tth.auth.constant.ResourcePermission;
@@ -15,7 +13,7 @@ import com.tth.auth.entity.ResourceAuthority;
 import com.tth.auth.exception.EntityNotFoundException;
 import com.tth.auth.exception.ResourcePermissionNotFoundException;
 import com.tth.auth.repository.ResourceAuthorityRepository;
-import com.tth.auth.utils.CurrentUserContext;
+import com.tth.auth.util.CurrentUserContext;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
@@ -81,17 +79,10 @@ public class ResourceAuthorityService {
     return resourceIds;
   }
   
-  public List<UUID> getAuthorizedResourceUUIDs(ResourceAccessCredential credential) {
-    List<UUID> resourceIds = this.getAuthorizedResourceIds(credential).stream()
-        .map(UUID::fromString)
-        .collect(Collectors.toList());
-    return resourceIds;
-  }
-  
   @Transactional
   public void grant(ResourceAuthorityInput input) {
     ResourceType targetType = input.getTargetType();
-    UUID targetId = input.getTargetId();
+    String targetId = input.getTargetId();
     ResourceType resourceType = input.getResourceType();
     String resourceId = input.getResourceId();
     
@@ -121,7 +112,7 @@ public class ResourceAuthorityService {
   @Transactional
   public void remove(ResourceAuthorityInput input) {
     ResourceType targetType = input.getTargetType();
-    UUID targetId = input.getTargetId();
+    String targetId = input.getTargetId();
     ResourceType resourceType = input.getResourceType();
     String resourceId = input.getResourceId();
     
@@ -151,7 +142,7 @@ public class ResourceAuthorityService {
       permissions = ResourcePermission.sum(criteria.getPermissions());
     }
     
-    List<UUID> grantedIds = resourceAuthorityRepository.findIdsHaveGrantPermission(currentUser.getResourceAuthorities(),
+    List<String> grantedIds = resourceAuthorityRepository.findIdsHaveGrantPermission(currentUser.getResourceAuthorities(),
         criteria.getTargetType(), criteria.getTargetId(),
         criteria.getResourceType(), criteria.getResourceId(),
         permissions, sort);

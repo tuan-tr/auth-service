@@ -1,7 +1,6 @@
 package com.tth.auth.exception.group;
 
 import java.util.HashMap;
-import java.util.UUID;
 
 import com.tth.auth.exception.CustomException;
 
@@ -12,8 +11,8 @@ import lombok.AllArgsConstructor;
 @AllArgsConstructor
 public class GroupMemberNotFoundException extends CustomException {
 
-  private UUID groupId;
-  private UUID userId;
+  private String groupId;
+  private String userId;
 
   @Override
   public Object getDetail() {

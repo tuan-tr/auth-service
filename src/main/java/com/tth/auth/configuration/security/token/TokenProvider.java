@@ -3,7 +3,6 @@ package com.tth.auth.configuration.security.token;
 import java.util.Date;
 import java.util.LinkedHashMap;
 import java.util.Map;
-import java.util.UUID;
 
 import com.tth.auth.configuration.security.user.UserAuthority;
 
@@ -42,7 +41,7 @@ public class TokenProvider {
         .parseClaimsJws(token)
         .getBody();
 
-    UUID userId = UUID.fromString(claims.get("userId").toString());
+    String userId = claims.get("userId").toString();
     String username = claims.get("username").toString();
 
     return UserAuthority.builder()

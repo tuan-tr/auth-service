@@ -1,7 +1,5 @@
 package com.tth.auth.dto.user;
 
-import java.util.UUID;
-
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.tth.auth.dto.personalInformation.PersonalInformationDTO;
 
@@ -18,7 +16,7 @@ import lombok.NoArgsConstructor;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class UserDTO {
   
-  private UUID id;
+  private String id;
   
   private String username;
   

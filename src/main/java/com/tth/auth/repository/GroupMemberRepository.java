@@ -2,7 +2,6 @@ package com.tth.auth.repository;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.UUID;
 
 import javax.validation.constraints.NotNull;
 
@@ -17,19 +16,19 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.validation.annotation.Validated;
 
 @Validated
-public interface GroupMemberRepository extends JpaRepository<GroupMember, UUID> {
+public interface GroupMemberRepository extends JpaRepository<GroupMember, String> {
   
-  int countByGroupId(UUID groupId);
+  int countByGroupId(String groupId);
   
-  Optional<GroupMember> findByGroupIdAndUserId(@NotNull UUID groupId, @NotNull UUID userId);
+  Optional<GroupMember> findByGroupIdAndUserId(@NotNull String groupId, @NotNull String userId);
   
   @Query(nativeQuery = true, value =
     "SELECT gm.group_id "
   + "FROM {h-schema}group_member gm "
-  + "LEFT JOIN {h-schema}tth_group gr ON gr.id = gm.group_id "
+  + "LEFT JOIN {h-schema}_group gr ON gr.id = gm.group_id "
   + "WHERE gm.user_id = :userId "
   + "AND gr.enabled = true ")
-  List<UUID> findEnabledGroupIds(@Param("userId") @NotNull UUID userId);
+  List<String> findEnabledGroupIds(@Param("userId") @NotNull String userId);
   
   @Query(value =
     "SELECT gm "
@@ -40,7 +39,7 @@ public interface GroupMemberRepository extends JpaRepository<GroupMember, UUID> 
   + "  OR CONCAT(gm.user.personalInformation.lastName, ' ', gm.user.personalInformation.firstName) LIKE %:keyword%) ")
   @EntityGraph(attributePaths = {"user", "user.personalInformation",
       "modifiedBy", "modifiedBy.personalInformation"})
-  <T> Page<T> findMembers(@Param("groupId") @NotNull UUID groupId,
+  <T> Page<T> findMembers(@Param("groupId") @NotNull String groupId,
       @Param("keyword") String keyword,
       Pageable pageable,
       @NotNull Class<T> type);

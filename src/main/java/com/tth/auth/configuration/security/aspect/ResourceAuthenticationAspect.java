@@ -1,13 +1,13 @@
 package com.tth.auth.configuration.security.aspect;
 
-import java.util.Arrays;
+import java.util.List;
 
 import com.tth.auth.configuration.security.annotation.ResourceAuthentication;
 import com.tth.auth.configuration.security.user.UserAuthority;
 import com.tth.auth.dto.resourceAuthority.ResourceAccessCredential;
 import com.tth.auth.exception.ResourcePermissionNotFoundException;
 import com.tth.auth.service.ResourceAuthorityService;
-import com.tth.auth.utils.CurrentUserContext;
+import com.tth.auth.util.CurrentUserContext;
 
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.annotation.Aspect;
@@ -45,7 +45,7 @@ public class ResourceAuthenticationAspect {
         .resourceType(resourceAuthentication.resourceType())
         .resourceId(resourceId)
         .targetIds(currentUser.getResourceAuthorities())
-        .permissions(Arrays.asList(resourceAuthentication.permissions()))
+        .permissions(List.of(resourceAuthentication.permissions()))
         .build();
 
     if (resourceAuthorityService.hasPermission(credential) == false) {

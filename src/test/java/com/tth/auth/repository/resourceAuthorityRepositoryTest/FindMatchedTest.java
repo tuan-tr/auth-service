@@ -2,9 +2,7 @@ package com.tth.auth.repository.resourceAuthorityRepositoryTest;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-import java.util.Arrays;
 import java.util.List;
-import java.util.UUID;
 
 import com.tth.auth.constant.ResourcePermission;
 import com.tth.auth.constant.ResourceType;
@@ -17,15 +15,17 @@ import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabas
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase.Replace;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.jdbc.Sql;
 
 @DataJpaTest
+@ActiveProfiles("test")
 @AutoConfigureTestDatabase(replace = Replace.NONE)
 @Sql(scripts = "classpath:/db/resourceAuthorityTestData.sql")
 public class FindMatchedTest {
 
-  private final UUID user1Id = UUID.fromString("d1c30a05-910a-40bb-94d4-ade4337221d1");
-  private final UUID user2Id = UUID.fromString("cb438448-838d-4a86-a66b-980ca5696638");
+  private final String user1Id = "user1Id";
+  private final String user2Id = "user2Id";
 
   @Autowired
   private ResourceAuthorityRepository resourceAuthorityRepository;
@@ -36,8 +36,8 @@ public class FindMatchedTest {
     List<ResourceAuthority> resourceAuthorities = resourceAuthorityRepository
         .findOnSpecificResource(
             ResourceType.USER,
-            user1Id.toString(),
-            Arrays.asList(user2Id),
+            user1Id,
+            List.of(user2Id),
             ResourcePermission.READ.getCode(),
             unpaged);
 
@@ -50,8 +50,8 @@ public class FindMatchedTest {
     List<ResourceAuthority> resourceAuthorities = resourceAuthorityRepository
         .findOnSpecificResource(
             ResourceType.USER,
-            user2Id.toString(),
-            Arrays.asList(user2Id),
+            user2Id,
+            List.of(user2Id),
             ResourcePermission.READ.getCode() + ResourcePermission.UPDATE.getCode(),
             unpaged);
 
@@ -64,8 +64,8 @@ public class FindMatchedTest {
     List<ResourceAuthority> resourceAuthorities = resourceAuthorityRepository
         .findOnSpecificResource(
             ResourceType.USER,
-            user1Id.toString(),
-            Arrays.asList(user1Id),
+            user1Id,
+            List.of(user1Id),
             ResourcePermission.READ.getCode(),
             unpaged);
 
@@ -78,8 +78,8 @@ public class FindMatchedTest {
     List<ResourceAuthority> resourceAuthorities = resourceAuthorityRepository
         .findOnSpecificResource(
             ResourceType.USER,
-            user2Id.toString(),
-            Arrays.asList(user1Id),
+            user2Id,
+            List.of(user1Id),
             ResourcePermission.UPDATE.getCode() + ResourcePermission.DELETE.getCode(),
             unpaged);
 
@@ -93,7 +93,7 @@ public class FindMatchedTest {
     List<ResourceAuthority> resourceAuthorities = resourceAuthorityRepository
         .findOnResourceType(
             ResourceType.USER,
-            Arrays.asList(user2Id),
+            List.of(user2Id),
             ResourcePermission.READ.getCode(),
             unpaged);
 
@@ -106,7 +106,7 @@ public class FindMatchedTest {
     List<ResourceAuthority> resourceAuthorities = resourceAuthorityRepository
         .findOnResourceType(
             ResourceType.USER,
-            Arrays.asList(user1Id),
+            List.of(user1Id),
             ResourcePermission.CREATE.getCode() + ResourcePermission.READ.getCode(),
             unpaged);
 

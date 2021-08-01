@@ -11,7 +11,7 @@ import com.tth.auth.dto.resourceAuthority.ResourceAuthorityCriteria;
 import com.tth.auth.dto.resourceAuthority.ResourceAuthorityData;
 import com.tth.auth.dto.resourceAuthority.ResourceAuthorityInput;
 import com.tth.auth.service.ResourceAuthorityService;
-import com.tth.auth.utils.CurrentUserContext;
+import com.tth.auth.util.CurrentUserContext;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
@@ -44,7 +44,7 @@ public class ResourceAuthorityController {
     resourceAuthorityService.authenticate(ResourceAccessCredential.builder()
         .targetIds(currentUser.getResourceAuthorities())
         .resourceType(input.getTargetType())
-        .resourceId(input.getTargetId().toString())
+        .resourceId(input.getTargetId())
         .permission(ResourcePermission.GRANT_PERMISSION)
         .build());
     
@@ -66,7 +66,7 @@ public class ResourceAuthorityController {
     resourceAuthorityService.authenticate(ResourceAccessCredential.builder()
         .targetIds(currentUser.getResourceAuthorities())
         .resourceType(input.getTargetType())
-        .resourceId(input.getTargetId().toString())
+        .resourceId(input.getTargetId())
         .permission(ResourcePermission.GRANT_PERMISSION)
         .build());
     
@@ -90,7 +90,7 @@ public class ResourceAuthorityController {
       resourceAuthorityService.authenticate(ResourceAccessCredential.builder()
           .targetIds(currentUser.getResourceAuthorities())
           .resourceType(criteria.getTargetType())
-          .resourceId(criteria.getTargetId().toString())
+          .resourceId(criteria.getTargetId())
           .permission(ResourcePermission.GRANT_PERMISSION)
           .build());
     }

@@ -1,7 +1,5 @@
 package com.tth.auth.entity;
 
-import java.util.UUID;
-
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -14,6 +12,8 @@ import javax.persistence.Table;
 
 import com.tth.auth.entity.audit.ShortAuditEntity;
 
+import org.hibernate.annotations.GenericGenerator;
+
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -22,7 +22,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Entity
-@Table(name = "group_member")
+@Table
 @Getter
 @Setter
 @Builder
@@ -31,8 +31,9 @@ import lombok.Setter;
 public class GroupMember extends ShortAuditEntity {
 
   @Id
-  @GeneratedValue(strategy = GenerationType.AUTO)
-  private UUID id;
+  @GeneratedValue(generator = "nanoid-generator", strategy = GenerationType.IDENTITY)
+  @GenericGenerator(name = "nanoid-generator", strategy = "com.tth.auth.configuration.jpa.NanoidGenerator")
+  private String id;
 
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "userId", referencedColumnName = "id")
@@ -43,6 +44,6 @@ public class GroupMember extends ShortAuditEntity {
   private Group group;
   
   @Column(insertable = false, updatable = false)
-  private UUID groupId;
+  private String groupId;
 
 }

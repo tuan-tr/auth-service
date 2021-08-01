@@ -61,7 +61,7 @@ public class AuthenticationService {
         .targetType(ResourceType.USER)
         .targetId(user.getId())
         .resourceType(ResourceType.USER)
-        .resourceId(user.getId().toString())
+        .resourceId(user.getId())
         .permissions(ResourcePermission.READ.getCode()
             + ResourcePermission.UPDATE.getCode())
         .modifiedBy(user)

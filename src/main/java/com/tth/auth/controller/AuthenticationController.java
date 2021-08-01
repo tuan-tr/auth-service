@@ -1,7 +1,5 @@
 package com.tth.auth.controller;
 
-import java.util.UUID;
-
 import javax.validation.Valid;
 
 import com.tth.auth.configuration.security.annotation.ResourceAuthentication;
@@ -13,7 +11,7 @@ import com.tth.auth.dto.authentication.SigninRequest;
 import com.tth.auth.dto.authentication.SignupRequest;
 import com.tth.auth.dto.user.UserDTO;
 import com.tth.auth.service.AuthenticationService;
-import com.tth.auth.utils.CurrentUserContext;
+import com.tth.auth.util.CurrentUserContext;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
@@ -49,7 +47,7 @@ public class AuthenticationController {
       permissions = ResourcePermission.READ,
       resourceId = "args[1]")
   public Object test(Authentication authentication,
-      @PathVariable(name = "id") UUID id
+      @PathVariable(name = "id") String id
   ) {
     UserAuthority currentUser = CurrentUserContext.get();
     return null;

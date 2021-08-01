@@ -1,4 +1,4 @@
-package com.tth.auth.utils;
+package com.tth.auth.util;
 
 import java.util.Optional;
 

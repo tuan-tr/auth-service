@@ -1,7 +1,6 @@
 package com.tth.auth.dto.group;
 
 import java.time.OffsetDateTime;
-import java.util.UUID;
 
 public interface GroupMemberData {
 
@@ -10,7 +9,7 @@ public interface GroupMemberData {
   User getUser();
 
   interface User {
-    UUID getId();
+    String getId();
     String getUsername();
     Boolean getEnabled();
     PersonalInformation getPersonalInformation();
@@ -22,7 +21,7 @@ public interface GroupMemberData {
   }
   
   interface ModifiedBy {
-    UUID getId();
+    String getId();
     PersonalInformation getPersonalInformation();
     
     interface PersonalInformation {

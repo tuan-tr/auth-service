@@ -1,9 +1,7 @@
 package com.tth.auth.repository.custom.impl;
 
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
-import java.util.UUID;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -21,13 +19,13 @@ public class CustomResourceAuthorityRepositoryImpl implements CustomResourceAuth
   private EntityManager entityManager;
   
   @Override
-  public List<UUID> findIdsHaveGrantPermission(Collection<UUID> targetIds, 
-      ResourceType targetType, UUID specificTargetId, 
+  public List<String> findIdsHaveGrantPermission(Collection<String> targetIds, 
+      ResourceType targetType, String specificTargetId, 
       ResourceType resourceType, String specificResourceId,
       Integer permissions, Sort sort
   ) {
     int grantCode = ResourcePermission.GRANT_PERMISSION.getCode();
-    List<String> allTargetType = Arrays.asList(ResourceType.USER.toString(), ResourceType.GROUP.toString());
+    List<String> allTargetType = List.of(ResourceType.USER.toString(), ResourceType.GROUP.toString());
     
     StringBuilder sqlBuilder = new StringBuilder()
     .append("SELECT ")
@@ -107,7 +105,7 @@ public class CustomResourceAuthorityRepositoryImpl implements CustomResourceAuth
     // StandardBasicTypeTemplate<ResourceType> resourceTypeCustom = new StandardBasicTypeTemplate<>(
     //     VarcharTypeDescriptor.INSTANCE, new EnumJavaTypeDescriptor<>(ResourceType.class));
     
-    List<UUID> rs = query.getResultList();
+    List<String> rs = query.getResultList();
         // .unwrap(org.hibernate.query.NativeQuery.class)
         // .addScalar("targetType", resourceTypeCustom)
         // .addScalar("resourceType", resourceTypeCustom)

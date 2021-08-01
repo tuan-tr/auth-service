@@ -1,7 +1,6 @@
 package com.tth.auth.configuration.security.user;
 
 import java.util.Collection;
-import java.util.UUID;
 
 import com.tth.auth.entity.User;
 
@@ -20,8 +19,8 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 public class UserAuthority implements UserDetails {
 
-  private UUID id;
-  private Collection<UUID> resourceAuthorities;
+  private String id;
+  private Collection<String> resourceAuthorities;
   private User userEntity;
 
   private Collection<GrantedAuthority> authorities;

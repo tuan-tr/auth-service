@@ -2,7 +2,6 @@ package com.tth.auth.service;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
 
 import com.tth.auth.configuration.security.user.UserAuthority;
 import com.tth.auth.constant.ResourcePermission;
@@ -21,7 +20,7 @@ import com.tth.auth.exception.EntityNotFoundException;
 import com.tth.auth.repository.GroupMemberRepository;
 import com.tth.auth.repository.ResourceAuthorityRepository;
 import com.tth.auth.repository.UserRepository;
-import com.tth.auth.utils.CurrentUserContext;
+import com.tth.auth.util.CurrentUserContext;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -61,8 +60,8 @@ public class UserService implements UserDetailsService {
     User user = userRepository.findByUsername(username)
         .orElseThrow(()-> new UsernameNotFoundException(username));
 
-    List<UUID> groupIds = groupMemberRepository.findEnabledGroupIds(user.getId());
-    List<UUID> resourceAuthorities = new ArrayList<>(groupIds);
+    List<String> groupIds = groupMemberRepository.findEnabledGroupIds(user.getId());
+    List<String> resourceAuthorities = new ArrayList<>(groupIds);
     resourceAuthorities.add(user.getId());
 
     return UserAuthority.builder()
@@ -78,7 +77,7 @@ public class UserService implements UserDetailsService {
         .build();
   }
   
-  public User getById(UUID id) {
+  public User getById(String id) {
     User user = userRepository.findById(id)
         .orElseThrow(() -> new EntityNotFoundException(
             User.class.getSimpleName(), id));
@@ -110,7 +109,7 @@ public class UserService implements UserDetailsService {
         .targetType(ResourceType.USER)
         .targetId(newUser.getId())
         .resourceType(ResourceType.USER)
-        .resourceId(newUser.getId().toString())
+        .resourceId(newUser.getId())
         .permissions(ResourcePermission.sum(ResourcePermission.READ,
             ResourcePermission.UPDATE))
         .build();
@@ -121,7 +120,7 @@ public class UserService implements UserDetailsService {
         .targetType(ResourceType.USER)
         .targetId(currentUser.getId())
         .resourceType(ResourceType.USER)
-        .resourceId(newUser.getId().toString())
+        .resourceId(newUser.getId())
         .permissions(ResourcePermission.sum(ResourcePermission.READ,
             ResourcePermission.UPDATE,
             ResourcePermission.DELETE,
@@ -134,7 +133,7 @@ public class UserService implements UserDetailsService {
         .build();
   }
   
-  public UserInfor getInforById(UUID id) {
+  public UserInfor getInforById(String id) {
     UserInfor userInfor = userRepository.findInforById(id, UserInfor.class)
         .orElseThrow(() -> new EntityNotFoundException(
             User.class.getSimpleName(), id));
@@ -153,9 +152,9 @@ public class UserService implements UserDetailsService {
     boolean hasReadPermissionOnAllUser = resourceAuthorityService
         .hasPermission(readCredential);
     
-    List<UUID> readableUserIds = null;
+    List<String> readableUserIds = null;
     if (hasReadPermissionOnAllUser == false) {
-      readableUserIds = resourceAuthorityService.getAuthorizedResourceUUIDs(readCredential);
+      readableUserIds = resourceAuthorityService.getAuthorizedResourceIds(readCredential);
       if (CollectionUtils.isEmpty(readableUserIds)) {
         return Page.empty();
       }
@@ -170,7 +169,7 @@ public class UserService implements UserDetailsService {
   }
   
   @Transactional
-  public void enable(UUID id, boolean enabled) {
+  public void enable(String id, boolean enabled) {
     User user = this.getById(id);
     user.setEnabled(enabled);
   }
