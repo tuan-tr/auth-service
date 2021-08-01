@@ -5,6 +5,7 @@ import javax.validation.Valid;
 import com.tth.auth.configuration.security.annotation.ResourceAuthentication;
 import com.tth.auth.constant.ResourcePermission;
 import com.tth.auth.constant.ResourceType;
+import com.tth.auth.dto.personalInformation.PersonalInformationInput;
 import com.tth.auth.dto.user.UserCriteria;
 import com.tth.auth.dto.user.UserDTO;
 import com.tth.auth.dto.user.UserInfor;
@@ -66,6 +67,17 @@ public class UserController {
       @PathVariable("enabled") boolean enabled
   ) {
     userService.enable(id, enabled);
+  }
+  
+  @PutMapping("{id}/information")
+  @ResponseStatus(HttpStatus.NO_CONTENT)
+  @ResourceAuthentication(resourceType = ResourceType.USER,
+      permissions = ResourcePermission.UPDATE,
+      resourceId = "args[0]")
+  public void updateInformation(@PathVariable("id") String id,
+      @RequestBody @Valid PersonalInformationInput input
+  ) {
+    userService.updateInformation(id, input);
   }
   
 }

@@ -174,4 +174,14 @@ public class UserService implements UserDetailsService {
     user.setEnabled(enabled);
   }
   
+  @Transactional
+  public void updateInformation(String id, PersonalInformationInput input) {
+    User user = this.getById(id);
+    PersonalInformation information = user.getPersonalInformation();
+    information.setFirstName(input.getFirstName());
+    information.setLastName(input.getLastName());
+    information.setBirthdate(input.getBirthdate());
+    information.setGender(input.getGender());
+  }
+  
 }
