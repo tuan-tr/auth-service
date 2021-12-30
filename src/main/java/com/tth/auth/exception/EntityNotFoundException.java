@@ -1,11 +1,11 @@
 package com.tth.auth.exception;
 
-import java.util.HashMap;
-
 import org.springframework.http.HttpStatus;
 
 import lombok.AllArgsConstructor;
+import lombok.Getter;
 
+@Getter
 @AllArgsConstructor
 public class EntityNotFoundException extends CustomException {
 
@@ -14,14 +14,6 @@ public class EntityNotFoundException extends CustomException {
 
   public EntityNotFoundException(String type) {
     this.type = type;
-  }
-
-  @Override
-  public Object getDetail() {
-    HashMap<String, Object> detail = new HashMap<>();
-    detail.put("type", this.type);
-    detail.put("id", this.id);
-    return detail;
   }
 
   @Override

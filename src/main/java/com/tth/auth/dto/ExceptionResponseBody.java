@@ -2,7 +2,6 @@ package com.tth.auth.dto;
 
 import java.time.OffsetDateTime;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 
 import lombok.AccessLevel;
@@ -23,8 +22,6 @@ public class ExceptionResponseBody {
   private int status;
   private String error;
   private String message;
-
-  @JsonIgnoreProperties({"arguments", "codes"}) // for BindException
   private Object detail;
 
   public String getError() {

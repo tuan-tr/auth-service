@@ -4,8 +4,10 @@ import java.time.OffsetDateTime;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
 import com.tth.auth.dto.ExceptionResponseBody;
 import com.tth.auth.exception.CustomException;
+import com.tth.auth.exception.responseMixIn.BindExceptionMixIn;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -14,6 +16,7 @@ import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.util.ObjectUtils;
 import org.springframework.validation.BindException;
+import org.springframework.validation.FieldError;
 import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
@@ -99,12 +102,17 @@ public class GlobalControllerAdvice {
   @ExceptionHandler(BindException.class)
   @ResponseStatus(HttpStatus.BAD_REQUEST)
   public ExceptionResponseBody handle(BindException e, WebRequest request) {
+    ObjectMapper objectMapper = new ObjectMapper();
+    objectMapper.disable(SerializationFeature.FAIL_ON_EMPTY_BEANS);
+    objectMapper.addMixIn(FieldError.class, BindExceptionMixIn.class);
+    Object detail = objectMapper.convertValue(e.getFieldErrors(), Object.class);
+    
     ExceptionResponseBody response = ExceptionResponseBody.builder()
         .timestamp(OffsetDateTime.now())
         .path(request.getDescription(false))
         .status(HttpStatus.BAD_REQUEST.value())
         .error(e.getClass().getSimpleName())
-        .detail(e.getFieldErrors())
+        .detail(detail)
         .build();
 
     log.warn("Exception: {}", convertToJson(response));
