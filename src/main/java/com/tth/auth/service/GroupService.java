@@ -7,7 +7,7 @@ import com.tth.auth.constant.ResourcePermission;
 import com.tth.auth.constant.ResourceType;
 import com.tth.auth.dto.group.GroupCriteria;
 import com.tth.auth.dto.group.GroupDTO;
-import com.tth.auth.dto.group.GroupData;
+import com.tth.auth.dto.group.GroupDetail;
 import com.tth.auth.dto.group.GroupInput;
 import com.tth.auth.dto.group.GroupMemberCriteria;
 import com.tth.auth.dto.group.GroupMemberData;
@@ -82,14 +82,14 @@ public class GroupService {
         .build();
   };
 
-  public GroupData getDataById(String id) {
-    GroupData group = groupRepository.findDataById(id, GroupData.class)
+  public GroupDetail getDataById(String id) {
+    GroupDetail group = groupRepository.findDataById(id, GroupDetail.class)
         .orElseThrow(() -> new EntityNotFoundException(Group.class.getSimpleName(), id));
     
     return group;
   }
   
-  public Page<GroupData> getList(GroupCriteria criteria, Pageable pageable) {
+  public Page<GroupDTO> getList(GroupCriteria criteria, Pageable pageable) {
     UserAuthority currentUser = CurrentUserContext.get();
     
     ResourceAccessCredential readCredential = ResourceAccessCredential.builder()
@@ -109,10 +109,8 @@ public class GroupService {
       }
     }
     
-    Page<GroupData> page = groupRepository.findList(readableGroupIds,
-        criteria.getEnabled(),
-        criteria.getKeyword(),
-        pageable, GroupData.class);
+    Page<GroupDTO> page = groupRepository.findList(readableGroupIds,
+        criteria, pageable);
     return page;
   }
   

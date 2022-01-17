@@ -2,7 +2,7 @@ package com.tth.auth.dto.group;
 
 import java.time.OffsetDateTime;
 
-public interface GroupData {
+public interface GroupDetail {
 
   String getId();
   String getName();

@@ -7,7 +7,7 @@ import com.tth.auth.constant.ResourcePermission;
 import com.tth.auth.constant.ResourceType;
 import com.tth.auth.dto.group.GroupCriteria;
 import com.tth.auth.dto.group.GroupDTO;
-import com.tth.auth.dto.group.GroupData;
+import com.tth.auth.dto.group.GroupDetail;
 import com.tth.auth.dto.group.GroupInput;
 import com.tth.auth.dto.group.GroupMemberCriteria;
 import com.tth.auth.dto.group.GroupMemberData;
@@ -51,12 +51,12 @@ public class GroupController {
   @ResourceAuthentication(resourceType = ResourceType.GROUP,
       permissions = ResourcePermission.READ,
       resourceId = "args[0]")
-  public GroupData getDataById(@PathVariable("id") String id) {
+  public GroupDetail getDataById(@PathVariable("id") String id) {
     return groupService.getDataById(id);
   }
   
   @GetMapping
-  public Page<GroupData> getList(@Valid GroupCriteria criteria, Pageable pageable) {
+  public Page<GroupDTO> getList(@Valid GroupCriteria criteria, Pageable pageable) {
     return groupService.getList(criteria, pageable);
   }
   
