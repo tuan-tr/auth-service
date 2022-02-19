@@ -47,29 +47,31 @@ public class CustomGroupRepositoryImpl implements CustomGroupRepository {
       return new PageImpl<>(Collections.emptyList(), pageable, 0);
     }
     
-    StringBuilder pageSqlBuilder = new StringBuilder(200)
-        .append("SELECT g FROM Group g")
-        .append(whereClause);
-    
+    String orderClause = "";
     if (pageable.getSort().isSorted()) {
       String sort = pageable.getSort().stream()
           .map(order -> order.getProperty() + " " + order.getDirection())
           .collect(Collectors.joining(", "));
     
-      pageSqlBuilder.append(" ORDER BY ").append(sort);
+      orderClause = new StringBuilder(" ORDER BY ").append(sort).toString();
     }
     
-    TypedQuery<Group> pageQuery = entityManager.createQuery(pageSqlBuilder.toString(), Group.class);
-    this.setFindListQueryParameter(pageQuery, ids, criteria);
+    StringBuilder pageSqlBuilder = new StringBuilder(200)
+        .append("SELECT g FROM Group g")
+        .append(whereClause)
+        .append(orderClause);
     
     EntityGraph<Group> graph = entityManager.createEntityGraph(Group.class);
     graph.addSubgraph("createdBy", User.class)
         .addSubgraph("personalInformation", PersonalInformation.class);
-        // .addAttributeNodes("personalInformation");
-    List<Group> entities = pageQuery.setFirstResult((int) pageable.getOffset())
-        .setMaxResults(pageable.getPageSize())
-        .getResultList();
     
+    TypedQuery<Group> pageQuery = entityManager.createQuery(pageSqlBuilder.toString(), Group.class)
+        .setFirstResult((int) pageable.getOffset())
+        .setMaxResults(pageable.getPageSize())
+        .setHint("javax.persistence.fetchgraph", graph);
+    this.setFindListQueryParameter(pageQuery, ids, criteria);
+    
+    List<Group> entities = pageQuery.getResultList();
     List<GroupDTO> content = this.convertToDTO(entities);
     
     return new PageImpl<>(content, pageable, total);
