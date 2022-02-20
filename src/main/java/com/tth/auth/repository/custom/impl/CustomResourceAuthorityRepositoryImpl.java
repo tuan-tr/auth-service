@@ -69,12 +69,12 @@ public class CustomResourceAuthorityRepositoryImpl implements CustomResourceAuth
     if (specificTargetId != null) {
       sqlBuilder
       .append("  AND ra.target_type = :targetType ")
-      .append("  AND ra.target_id == :specificTargetId ");
+      .append("  AND ra.target_id = :specificTargetId ");
     }
     if (specificResourceId != null) {
       sqlBuilder
       .append("  AND ra.resource_type = :resourceType ")
-      .append("  AND ra.resource_id == :specificResourceId ");
+      .append("  AND ra.resource_id = :specificResourceId ");
     }
     
     Query query = entityManager.createNativeQuery(sqlBuilder.toString());
