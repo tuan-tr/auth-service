@@ -140,7 +140,7 @@ public class UserService implements UserDetailsService {
     return userInfor;
   }
   
-  public Page<UserInfor> getList(UserCriteria criteria, Pageable pageable) {
+  public Page<UserDTO> getList(UserCriteria criteria, Pageable pageable) {
     UserAuthority currentUser = CurrentUserContext.get();
     
     ResourceAccessCredential readCredential = ResourceAccessCredential.builder()
@@ -160,12 +160,8 @@ public class UserService implements UserDetailsService {
       }
     }
     
-    Page<UserInfor> userPage = userRepository.findList(readableUserIds,
-        criteria.getEnabled(),
-        criteria.getKeyword(),
-        criteria.getGender(),
-        pageable, UserInfor.class);
-    return userPage;
+    Page<UserDTO> page = userRepository.findList(readableUserIds, criteria, pageable);
+    return page;
   }
   
   @Transactional

@@ -54,7 +54,7 @@ public class UserController {
   }
   
   @GetMapping
-  public Page<UserInfor> getList(@Valid UserCriteria criteria, Pageable pageable) {
+  public Page<UserDTO> getList(@Valid UserCriteria criteria, Pageable pageable) {
     return userService.getList(criteria, pageable);
   }
   

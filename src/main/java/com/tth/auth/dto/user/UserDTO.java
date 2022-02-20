@@ -1,5 +1,7 @@
 package com.tth.auth.dto.user;
 
+import java.time.OffsetDateTime;
+
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.tth.auth.dto.personalInformation.PersonalInformationDTO;
 
@@ -17,11 +19,10 @@ import lombok.NoArgsConstructor;
 public class UserDTO {
   
   private String id;
-  
   private String username;
-  
   private Boolean enabled;
-  
+  private UserDTO createdBy;
   private PersonalInformationDTO personalInformation;
-
+  private OffsetDateTime createdAt;
+  
 }
