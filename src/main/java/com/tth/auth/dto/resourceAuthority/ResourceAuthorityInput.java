@@ -3,6 +3,7 @@ package com.tth.auth.dto.resourceAuthority;
 import java.util.List;
 
 import javax.validation.constraints.AssertTrue;
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 
@@ -19,7 +20,7 @@ public class ResourceAuthorityInput {
   @NotNull
   private ResourceType targetType;
   
-  @NotNull
+  @NotBlank
   private String targetId;
   
   @NotNull
@@ -34,6 +35,11 @@ public class ResourceAuthorityInput {
   boolean isValidTargetType() {
     return targetType == null ^
         (targetType == ResourceType.GROUP || targetType == ResourceType.USER);
+  }
+  
+  @AssertTrue(message="resourceId can be null or must not be blank")
+  boolean isValidResourceId() {
+    return resourceId == null || resourceId.trim().length() > 0;
   }
   
 }

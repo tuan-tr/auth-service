@@ -68,7 +68,7 @@ public interface ResourceAuthorityRepository extends JpaRepository<ResourceAutho
   + "WHERE targetType = :targetType "
   + "AND targetId = :targetId "
   + "AND resourceType = :resourceType "
-  + "AND ((resourceId IS NULL AND ra.resourceId IS NULL) "
+  + "AND ((:resourceId IS NULL AND ra.resourceId IS NULL) "
   + "  OR ra.resourceId = :resourceId) ")
   Optional<ResourceAuthority> findOne(
       @Param("targetType") @NotNull ResourceType targetType,

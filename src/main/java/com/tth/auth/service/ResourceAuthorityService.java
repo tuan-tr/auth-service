@@ -1,5 +1,6 @@
 package com.tth.auth.service;
 
+import java.util.Collections;
 import java.util.List;
 
 import com.tth.auth.configuration.security.user.UserAuthority;
@@ -21,7 +22,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.CollectionUtils;
+import org.apache.commons.collections4.CollectionUtils;
 
 @Service
 @Transactional(readOnly = true)
@@ -146,6 +147,10 @@ public class ResourceAuthorityService {
         criteria.getTargetType(), criteria.getTargetId(),
         criteria.getResourceType(), criteria.getResourceId(),
         permissions, sort);
+    
+    if (CollectionUtils.isEmpty(grantedIds)) {
+      return Collections.emptyList();
+    }
     
     List<ResourceAuthorityData> page = resourceAuthorityRepository.findList(grantedIds,
         criteria.getTargetType(), 
