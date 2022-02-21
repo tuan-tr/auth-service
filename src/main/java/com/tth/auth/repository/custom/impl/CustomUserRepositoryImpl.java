@@ -33,7 +33,7 @@ public class CustomUserRepositoryImpl implements CustomUserRepository {
   public Page<UserDTO> findList(Collection<String> ids, UserCriteria criteria, Pageable pageable) {
     String whereClause = this.makeFindListWhereClauseSql(ids, criteria);
     
-    StringBuilder countSqlBuilder = new StringBuilder(200)
+    StringBuilder countSqlBuilder = new StringBuilder(300)
         .append("SELECT COUNT(u.id) FROM User u")
         .append(" LEFT JOIN u.personalInformation pi")
         .append(whereClause);
@@ -55,7 +55,7 @@ public class CustomUserRepositoryImpl implements CustomUserRepository {
       orderClause = new StringBuilder(" ORDER BY ").append(sort).toString();
     }
     
-    StringBuilder pageSqlBuilder = new StringBuilder(200)
+    StringBuilder pageSqlBuilder = new StringBuilder(300)
         .append("SELECT u FROM User u")
         .append(" LEFT JOIN FETCH u.personalInformation pi")
         .append(whereClause)
@@ -76,7 +76,7 @@ public class CustomUserRepositoryImpl implements CustomUserRepository {
   }
 
   private String makeFindListWhereClauseSql(Collection<String> ids, UserCriteria criteria) {
-    StringBuilder sqlBuilder = new StringBuilder(150)
+    StringBuilder sqlBuilder = new StringBuilder(250)
         .append(" WHERE 1=1");
     
     if (CollectionUtils.isNotEmpty(ids)) {
