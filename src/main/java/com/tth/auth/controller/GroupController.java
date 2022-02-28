@@ -9,8 +9,8 @@ import com.tth.auth.dto.group.GroupCriteria;
 import com.tth.auth.dto.group.GroupDTO;
 import com.tth.auth.dto.group.GroupDetail;
 import com.tth.auth.dto.group.GroupInput;
-import com.tth.auth.dto.group.GroupMemberCriteria;
-import com.tth.auth.dto.group.GroupMemberData;
+import com.tth.auth.dto.groupMember.GroupMemberCriteria;
+import com.tth.auth.dto.groupMember.GroupMemberDto;
 import com.tth.auth.service.GroupService;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -123,7 +123,7 @@ public class GroupController {
   @ResourceAuthentication(resourceType = ResourceType.GROUP,
       permissions = ResourcePermission.READ,
       resourceId = "args[0]")
-  public Page<GroupMemberData> getMembers(@PathVariable("id") String groupId,
+  public Page<GroupMemberDto> getMembers(@PathVariable("id") String groupId,
       @Valid GroupMemberCriteria criteria, Pageable pageable
   ) {
     return groupService.getMembers(groupId, criteria, pageable);

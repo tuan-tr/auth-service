@@ -9,8 +9,8 @@ import com.tth.auth.dto.group.GroupCriteria;
 import com.tth.auth.dto.group.GroupDTO;
 import com.tth.auth.dto.group.GroupDetail;
 import com.tth.auth.dto.group.GroupInput;
-import com.tth.auth.dto.group.GroupMemberCriteria;
-import com.tth.auth.dto.group.GroupMemberData;
+import com.tth.auth.dto.groupMember.GroupMemberCriteria;
+import com.tth.auth.dto.groupMember.GroupMemberDto;
 import com.tth.auth.dto.resourceAuthority.ResourceAccessCredential;
 import com.tth.auth.entity.Group;
 import com.tth.auth.entity.GroupMember;
@@ -20,6 +20,7 @@ import com.tth.auth.exception.EntityNotFoundException;
 import com.tth.auth.exception.group.DuplicateGroupMemberException;
 import com.tth.auth.exception.group.GroupMemberNotFoundException;
 import com.tth.auth.exception.group.GroupNotEmptyException;
+import com.tth.auth.projector.GroupMemberProjector;
 import com.tth.auth.repository.GroupMemberRepository;
 import com.tth.auth.repository.GroupRepository;
 import com.tth.auth.repository.ResourceAuthorityRepository;
@@ -27,6 +28,7 @@ import com.tth.auth.util.CurrentUserContext;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -167,10 +169,10 @@ public class GroupService {
     groupMemberRepository.delete(groupMember);
   }
   
-  public Page<GroupMemberData> getMembers(String groupId, GroupMemberCriteria criteria, Pageable pageable) {
-    return groupMemberRepository.findMembers(groupId, 
-        criteria.getKeyword(),
-        pageable, GroupMemberData.class);
+  public Page<GroupMemberDto> getMembers(String groupId, GroupMemberCriteria criteria, Pageable pageable) {
+    Page<GroupMember> page = groupMemberRepository.findList(groupId, criteria, pageable);
+    List<GroupMemberDto> content = GroupMemberProjector.convertToDto(page.getContent());
+    return new PageImpl<>(content, pageable, page.getTotalElements());
   }
   
 }
