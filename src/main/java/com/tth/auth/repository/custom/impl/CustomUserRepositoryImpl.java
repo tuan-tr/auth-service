@@ -11,9 +11,7 @@ import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 import javax.persistence.TypedQuery;
 
-import com.tth.auth.dto.personalInformation.PersonalInformationDTO;
 import com.tth.auth.dto.user.UserCriteria;
-import com.tth.auth.dto.user.UserDTO;
 import com.tth.auth.entity.PersonalInformation;
 import com.tth.auth.entity.User;
 import com.tth.auth.repository.custom.CustomUserRepository;
@@ -30,7 +28,7 @@ public class CustomUserRepositoryImpl implements CustomUserRepository {
   private EntityManager entityManager;
   
   @Override
-  public Page<UserDTO> findList(Collection<String> ids, UserCriteria criteria, Pageable pageable) {
+  public Page<User> findList(Collection<String> ids, UserCriteria criteria, Pageable pageable) {
     String whereClause = this.makeFindListWhereClauseSql(ids, criteria);
     
     StringBuilder countSqlBuilder = new StringBuilder(300)
@@ -70,9 +68,7 @@ public class CustomUserRepositoryImpl implements CustomUserRepository {
     this.setFindListQueryParameter(pageQuery, ids, criteria);
     
     List<User> entities = pageQuery.getResultList();
-    List<UserDTO> content = this.convertToDTO(entities);
-    
-    return new PageImpl<>(content, pageable, total);
+    return new PageImpl<>(entities, pageable, total);
   }
 
   private String makeFindListWhereClauseSql(Collection<String> ids, UserCriteria criteria) {
@@ -109,27 +105,6 @@ public class CustomUserRepositoryImpl implements CustomUserRepository {
     if (criteria.getGender() != null) {
       query.setParameter("gender", criteria.getEnabled());
     }
-  }
-  
-  private List<UserDTO> convertToDTO(List<User> entities) {
-    return entities.stream()
-        .map(entity -> this.convertToDTO(entity))
-        .collect(Collectors.toList());
-  }
-  
-  private UserDTO convertToDTO(User entity) {
-    PersonalInformation infor = entity.getPersonalInformation();
-    return UserDTO.builder()
-        .id(entity.getId())
-        .username(entity.getUsername())
-        .enabled(entity.isEnabled())
-        .personalInformation(infor == null ? null : PersonalInformationDTO.builder()
-            .firstName(infor.getFirstName())
-            .lastName(infor.getLastName())
-            .birthdate(infor.getBirthdate())
-            .gender(infor.getGender())
-            .build())
-        .build();
   }
   
 }

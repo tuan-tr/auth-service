@@ -12,9 +12,6 @@ import javax.persistence.Query;
 import javax.persistence.TypedQuery;
 
 import com.tth.auth.dto.group.GroupCriteria;
-import com.tth.auth.dto.group.GroupDTO;
-import com.tth.auth.dto.personalInformation.PersonalInformationDTO;
-import com.tth.auth.dto.user.UserDTO;
 import com.tth.auth.entity.Group;
 import com.tth.auth.entity.PersonalInformation;
 import com.tth.auth.entity.User;
@@ -32,7 +29,7 @@ public class CustomGroupRepositoryImpl implements CustomGroupRepository {
   private EntityManager entityManager;
   
   @Override
-  public Page<GroupDTO> findList(Collection<String> ids, GroupCriteria criteria, Pageable pageable) {
+  public Page<Group> findList(Collection<String> ids, GroupCriteria criteria, Pageable pageable) {
     String whereClause = this.makeFindListWhereClauseSql(ids, criteria);
     
     StringBuilder countSqlBuilder = new StringBuilder(200)
@@ -72,9 +69,7 @@ public class CustomGroupRepositoryImpl implements CustomGroupRepository {
     this.setFindListQueryParameter(pageQuery, ids, criteria);
     
     List<Group> entities = pageQuery.getResultList();
-    List<GroupDTO> content = this.convertToDTO(entities);
-    
-    return new PageImpl<>(content, pageable, total);
+    return new PageImpl<>(entities, pageable, total);
   }
 
   private String makeFindListWhereClauseSql(Collection<String> ids, GroupCriteria criteria) {
@@ -104,30 +99,6 @@ public class CustomGroupRepositoryImpl implements CustomGroupRepository {
     if (criteria.getEnabled() != null) {
       query.setParameter("enabled", criteria.getEnabled());
     }
-  }
-  
-  private List<GroupDTO> convertToDTO(List<Group> entities) {
-    return entities.stream()
-        .map(entity -> this.convertToDTO(entity))
-        .collect(Collectors.toList());
-  }
-  
-  private GroupDTO convertToDTO(Group entity) {
-    User creator = entity.getCreatedBy();
-    PersonalInformation creatorInfor = creator.getPersonalInformation();
-    return GroupDTO.builder()
-        .id(entity.getId())
-        .name(entity.getName())
-        .enabled(entity.isEnabled())
-        .createdAt(entity.getCreatedAt())
-        .createdBy(UserDTO.builder()
-            .id(creator.getId())
-            .personalInformation(creatorInfor == null ? null : PersonalInformationDTO.builder()
-                .firstName(creatorInfor.getFirstName())
-                .lastName(creatorInfor.getLastName())
-                .build())
-            .build())
-        .build();
   }
   
 }

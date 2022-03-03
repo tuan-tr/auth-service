@@ -6,8 +6,7 @@ import com.tth.auth.configuration.security.user.UserAuthority;
 import com.tth.auth.constant.ResourcePermission;
 import com.tth.auth.constant.ResourceType;
 import com.tth.auth.dto.group.GroupCriteria;
-import com.tth.auth.dto.group.GroupDTO;
-import com.tth.auth.dto.group.GroupDetail;
+import com.tth.auth.dto.group.GroupDto;
 import com.tth.auth.dto.group.GroupInput;
 import com.tth.auth.dto.groupMember.GroupMemberCriteria;
 import com.tth.auth.dto.groupMember.GroupMemberDto;
@@ -21,6 +20,7 @@ import com.tth.auth.exception.group.DuplicateGroupMemberException;
 import com.tth.auth.exception.group.GroupMemberNotFoundException;
 import com.tth.auth.exception.group.GroupNotEmptyException;
 import com.tth.auth.projector.GroupMemberProjector;
+import com.tth.auth.projector.GroupProjector;
 import com.tth.auth.repository.GroupMemberRepository;
 import com.tth.auth.repository.GroupRepository;
 import com.tth.auth.repository.ResourceAuthorityRepository;
@@ -59,7 +59,7 @@ public class GroupService {
   }
   
   @Transactional
-  public GroupDTO create(GroupInput input) {
+  public GroupDto create(GroupInput input) {
     Group group = Group.builder()
         .name(input.getName())
         .enabled(input.isEnabled())
@@ -79,19 +79,20 @@ public class GroupService {
         .build();
     resourceAuthorityRepository.save(currentUserAuthorityOnNewGroup);
 
-    return GroupDTO.builder()
+    return GroupDto.builder()
         .id(group.getId())
         .build();
   };
 
-  public GroupDetail getDataById(String id) {
-    GroupDetail group = groupRepository.findDataById(id, GroupDetail.class)
+  public GroupDto getDetailById(String id) {
+    Group group = groupRepository.findIncludeCreator(id)
         .orElseThrow(() -> new EntityNotFoundException(Group.class.getSimpleName(), id));
     
-    return group;
+    GroupDto dto = GroupProjector.convertToDto(group);
+    return dto;
   }
   
-  public Page<GroupDTO> getList(GroupCriteria criteria, Pageable pageable) {
+  public Page<GroupDto> getList(GroupCriteria criteria, Pageable pageable) {
     UserAuthority currentUser = CurrentUserContext.get();
     
     ResourceAccessCredential readCredential = ResourceAccessCredential.builder()
@@ -111,9 +112,9 @@ public class GroupService {
       }
     }
     
-    Page<GroupDTO> page = groupRepository.findList(readableGroupIds,
-        criteria, pageable);
-    return page;
+    Page<Group> page = groupRepository.findList(readableGroupIds,criteria, pageable);
+    List<GroupDto> content = GroupProjector.convertToDto(page.getContent());
+    return new PageImpl<>(content, pageable, page.getTotalElements());
   }
   
   @Transactional

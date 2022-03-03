@@ -6,8 +6,7 @@ import com.tth.auth.configuration.security.annotation.ResourceAuthentication;
 import com.tth.auth.constant.ResourcePermission;
 import com.tth.auth.constant.ResourceType;
 import com.tth.auth.dto.group.GroupCriteria;
-import com.tth.auth.dto.group.GroupDTO;
-import com.tth.auth.dto.group.GroupDetail;
+import com.tth.auth.dto.group.GroupDto;
 import com.tth.auth.dto.group.GroupInput;
 import com.tth.auth.dto.groupMember.GroupMemberCriteria;
 import com.tth.auth.dto.groupMember.GroupMemberDto;
@@ -43,7 +42,7 @@ public class GroupController {
   @ResponseStatus(HttpStatus.CREATED)
   @ResourceAuthentication(resourceType = ResourceType.GROUP,
       permissions = ResourcePermission.CREATE)
-  public GroupDTO create(@RequestBody @Valid GroupInput input) {
+  public GroupDto create(@RequestBody @Valid GroupInput input) {
     return groupService.create(input);
   }
   
@@ -51,12 +50,12 @@ public class GroupController {
   @ResourceAuthentication(resourceType = ResourceType.GROUP,
       permissions = ResourcePermission.READ,
       resourceId = "args[0]")
-  public GroupDetail getDataById(@PathVariable("id") String id) {
-    return groupService.getDataById(id);
+  public GroupDto getDetailById(@PathVariable("id") String id) {
+    return groupService.getDetailById(id);
   }
   
   @GetMapping
-  public Page<GroupDTO> getList(@Valid GroupCriteria criteria, Pageable pageable) {
+  public Page<GroupDto> getList(@Valid GroupCriteria criteria, Pageable pageable) {
     return groupService.getList(criteria, pageable);
   }
   

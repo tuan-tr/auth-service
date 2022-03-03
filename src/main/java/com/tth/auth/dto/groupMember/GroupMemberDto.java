@@ -3,7 +3,7 @@ package com.tth.auth.dto.groupMember;
 import java.time.OffsetDateTime;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
-import com.tth.auth.dto.user.UserDTO;
+import com.tth.auth.dto.user.UserDto;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -17,10 +17,10 @@ import lombok.NoArgsConstructor;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class GroupMemberDto {
   
-  private UserDTO user;
+  private UserDto user;
   
   private OffsetDateTime modifiedAt;
   
-  private UserDTO modifiedBy;
+  private UserDto modifiedBy;
   
 }

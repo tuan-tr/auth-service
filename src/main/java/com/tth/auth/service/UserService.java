@@ -9,14 +9,14 @@ import com.tth.auth.constant.ResourceType;
 import com.tth.auth.dto.personalInformation.PersonalInformationInput;
 import com.tth.auth.dto.resourceAuthority.ResourceAccessCredential;
 import com.tth.auth.dto.user.UserCriteria;
-import com.tth.auth.dto.user.UserDTO;
-import com.tth.auth.dto.user.UserInfor;
+import com.tth.auth.dto.user.UserDto;
 import com.tth.auth.dto.user.UserInput;
 import com.tth.auth.entity.PersonalInformation;
 import com.tth.auth.entity.ResourceAuthority;
 import com.tth.auth.entity.User;
 import com.tth.auth.exception.DuplicateKeyException;
 import com.tth.auth.exception.EntityNotFoundException;
+import com.tth.auth.projector.UserProjector;
 import com.tth.auth.repository.GroupMemberRepository;
 import com.tth.auth.repository.ResourceAuthorityRepository;
 import com.tth.auth.repository.UserRepository;
@@ -24,6 +24,7 @@ import com.tth.auth.util.CurrentUserContext;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -85,7 +86,7 @@ public class UserService implements UserDetailsService {
   }
   
   @Transactional
-  public UserDTO create(UserInput input) {
+  public UserDto create(UserInput input) {
     userRepository.findByUsername(input.getUsername())
         .ifPresent(user -> {
           throw new DuplicateKeyException("username", input.getUsername());
@@ -128,19 +129,21 @@ public class UserService implements UserDetailsService {
         .build();
     resourceAuthorityRepository.save(currentUserAuthorityOnNewUser);
     
-    return UserDTO.builder()
+    return UserDto.builder()
         .id(newUser.getId())
         .build();
   }
   
-  public UserInfor getInforById(String id) {
-    UserInfor userInfor = userRepository.findInforById(id, UserInfor.class)
+  public UserDto getInforById(String id) {
+    User userInfor = userRepository.findInforById(id)
         .orElseThrow(() -> new EntityNotFoundException(
             User.class.getSimpleName(), id));
-    return userInfor;
+    
+    UserDto dto = UserProjector.convertToDetailDto(userInfor);
+    return dto;
   }
   
-  public Page<UserDTO> getList(UserCriteria criteria, Pageable pageable) {
+  public Page<UserDto> getList(UserCriteria criteria, Pageable pageable) {
     UserAuthority currentUser = CurrentUserContext.get();
     
     ResourceAccessCredential readCredential = ResourceAccessCredential.builder()
@@ -160,8 +163,9 @@ public class UserService implements UserDetailsService {
       }
     }
     
-    Page<UserDTO> page = userRepository.findList(readableUserIds, criteria, pageable);
-    return page;
+    Page<User> page = userRepository.findList(readableUserIds, criteria, pageable);
+    List<UserDto> content = UserProjector.convertToBaseDto(page.getContent());
+    return new PageImpl<>(content, pageable, page.getTotalElements());
   }
   
   @Transactional

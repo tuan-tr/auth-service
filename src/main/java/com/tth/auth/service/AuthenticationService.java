@@ -7,7 +7,7 @@ import com.tth.auth.constant.ResourceType;
 import com.tth.auth.dto.authentication.Credentials;
 import com.tth.auth.dto.authentication.SigninRequest;
 import com.tth.auth.dto.authentication.SignupRequest;
-import com.tth.auth.dto.user.UserDTO;
+import com.tth.auth.dto.user.UserDto;
 import com.tth.auth.entity.ResourceAuthority;
 import com.tth.auth.entity.User;
 import com.tth.auth.exception.DuplicateKeyException;
@@ -43,7 +43,7 @@ public class AuthenticationService {
   private TokenProvider tokenProvider;
 
   @Transactional
-  public UserDTO signup(SignupRequest request) {
+  public UserDto signup(SignupRequest request) {
     userRepository.findByUsername(request.getUsername())
         .ifPresent(user -> {
           throw new DuplicateKeyException("username", request.getUsername());
@@ -68,7 +68,7 @@ public class AuthenticationService {
         .build();
     resourceAuthorityRepository.save(resourceAuthority);
 
-    return UserDTO.builder()
+    return UserDto.builder()
         .id(user.getId())
         .build();
   }

@@ -9,7 +9,7 @@ import com.tth.auth.constant.ResourceType;
 import com.tth.auth.dto.authentication.Credentials;
 import com.tth.auth.dto.authentication.SigninRequest;
 import com.tth.auth.dto.authentication.SignupRequest;
-import com.tth.auth.dto.user.UserDTO;
+import com.tth.auth.dto.user.UserDto;
 import com.tth.auth.service.AuthenticationService;
 import com.tth.auth.util.CurrentUserContext;
 
@@ -32,7 +32,7 @@ public class AuthenticationController {
   private AuthenticationService authenticationService;
 
   @PostMapping("/signup")
-  public UserDTO signup(@RequestBody @Valid SignupRequest request) {
+  public UserDto signup(@RequestBody @Valid SignupRequest request) {
     return authenticationService.signup(request);
   }
 

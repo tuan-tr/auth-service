@@ -7,8 +7,7 @@ import com.tth.auth.constant.ResourcePermission;
 import com.tth.auth.constant.ResourceType;
 import com.tth.auth.dto.personalInformation.PersonalInformationInput;
 import com.tth.auth.dto.user.UserCriteria;
-import com.tth.auth.dto.user.UserDTO;
-import com.tth.auth.dto.user.UserInfor;
+import com.tth.auth.dto.user.UserDto;
 import com.tth.auth.dto.user.UserInput;
 import com.tth.auth.service.UserService;
 
@@ -41,7 +40,7 @@ public class UserController {
   @ResponseStatus(HttpStatus.CREATED)
   @ResourceAuthentication(resourceType = ResourceType.USER,
       permissions = ResourcePermission.CREATE)
-  public UserDTO create(@RequestBody @Valid UserInput input) {
+  public UserDto create(@RequestBody @Valid UserInput input) {
     return userService.create(input);
   }
   
@@ -49,12 +48,12 @@ public class UserController {
   @ResourceAuthentication(resourceType = ResourceType.USER,
       permissions = ResourcePermission.READ,
       resourceId = "args[0]")
-  public UserInfor getInforById(@PathVariable("id") String id) {
+  public UserDto getInforById(@PathVariable("id") String id) {
     return userService.getInforById(id);
   }
   
   @GetMapping
-  public Page<UserDTO> getList(@Valid UserCriteria criteria, Pageable pageable) {
+  public Page<UserDto> getList(@Valid UserCriteria criteria, Pageable pageable) {
     return userService.getList(criteria, pageable);
   }
   
