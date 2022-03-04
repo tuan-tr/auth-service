@@ -8,7 +8,7 @@ spring:
     properties:
       hibernate:
         default_schema: auth
-        dialect: com.tth.auth.configuration.hibernate.CustomPostgreSQLDialect
+        # dialect: com.tth.auth.configuration.hibernate.CustomPostgreSQLDialect
   flyway:
     enabled: true
     schemas: auth
