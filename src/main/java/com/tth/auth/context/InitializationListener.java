@@ -4,7 +4,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import com.tth.auth.configuration.setting.UserSetting;
+import com.tth.auth.configuration.setting.UserEnvironment;
 import com.tth.auth.constant.ResourceType;
 import com.tth.auth.entity.ResourceAuthority;
 import com.tth.auth.entity.User;
@@ -26,7 +26,7 @@ import lombok.extern.slf4j.Slf4j;
 public class InitializationListener implements ApplicationListener<ApplicationReadyEvent> {
 
   @Autowired
-  private UserSetting adminUserSetting;
+  private UserEnvironment adminUserEnvironment;
 
   @Autowired
   private UserRepository userRepository;
@@ -46,7 +46,7 @@ public class InitializationListener implements ApplicationListener<ApplicationRe
     int allPermission = Integer.MAX_VALUE;
     
     boolean adminUserExisted = userRepository.findByUsername(
-        adminUserSetting.getUsername())
+        adminUserEnvironment.getUsername())
             .isPresent();
 
     if (adminUserExisted) {
@@ -54,8 +54,8 @@ public class InitializationListener implements ApplicationListener<ApplicationRe
     }
 
     User adminUser = User.builder()
-        .username(adminUserSetting.getUsername())
-        .password(passwordEncoder.encode(adminUserSetting.getPassword()))
+        .username(adminUserEnvironment.getUsername())
+        .password(passwordEncoder.encode(adminUserEnvironment.getPassword()))
         .enabled(true)
         .rootUser(true)
         .build();

@@ -4,6 +4,7 @@ import com.tth.auth.configuration.security.RestAuthenticationEntryPoint;
 import com.tth.auth.configuration.security.TokenAuthenticationFilter;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -20,6 +21,10 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 
 @Configuration
 public class WebSecurityConfigurer extends WebSecurityConfigurerAdapter {
+
+  @Autowired
+  @Qualifier("nonAuthenticatedPaths")
+  private String[] nonAuthenticatedPaths;
 
   @Autowired
   private UserDetailsService userService;
@@ -54,10 +59,8 @@ public class WebSecurityConfigurer extends WebSecurityConfigurerAdapter {
         .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
         .and()
         .authorizeRequests()
-        .antMatchers("/signup", "/signin",
-            "/docs/**", "/swagger-ui/**", "/swagger-ui.html"
-            ).permitAll()
-        .anyRequest().authenticated()
+          .antMatchers(nonAuthenticatedPaths).permitAll()
+          .anyRequest().authenticated()
         .and()
         .exceptionHandling().authenticationEntryPoint(restAuthenticationEntryPoint)
         .and()

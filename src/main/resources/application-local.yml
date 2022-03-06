@@ -17,3 +17,5 @@ DEFAULT_USER_PASSWORD: 123456
 
 ADMIN_USERNAME: superadmin
 ADMIN_PASSWORD: 123456
+
+NON_AUTHENTICATED_PATHS: /signin, /signup, /docs/**, /swagger-ui/**, /swagger-ui.html

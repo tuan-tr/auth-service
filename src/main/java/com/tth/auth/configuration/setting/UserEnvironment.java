@@ -5,7 +5,7 @@ import lombok.NoArgsConstructor;
 
 @Data
 @NoArgsConstructor
-public class UserSetting {
+public class UserEnvironment {
 
   private String username;
   private String password;

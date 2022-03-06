@@ -1,4 +1,4 @@
-package com.tth.auth.configuration.jpa;
+package com.tth.auth.configuration.hibernate;
 
 import java.time.OffsetDateTime;
 import java.time.temporal.TemporalAccessor;

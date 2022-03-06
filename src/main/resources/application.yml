@@ -37,8 +37,9 @@ springdoc:
     path: /swagger-ui.html
     tags-sorter: alpha
 
-setting:
+environment:
   default-user-password: ${DEFAULT_USER_PASSWORD:123456}
   admin-user:
     username: ${ADMIN_USERNAME:superadmin}
     password: ${ADMIN_PASSWORD:123456}
+  non-authenticated-paths: ${NON_AUTHENTICATED_PATHS:/signin}

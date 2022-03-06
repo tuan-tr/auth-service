@@ -10,7 +10,8 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
-import com.tth.auth.entity.audit.ShortAuditEntity;
+import com.tth.auth.configuration.hibernate.NanoidGenerator;
+import com.tth.auth.entity.audit.ModifyAuditEntity;
 
 import org.hibernate.annotations.GenericGenerator;
 
@@ -28,11 +29,11 @@ import lombok.Setter;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
-public class GroupMember extends ShortAuditEntity {
+public class GroupMember extends ModifyAuditEntity {
 
   @Id
   @GeneratedValue(generator = "nanoid-generator", strategy = GenerationType.IDENTITY)
-  @GenericGenerator(name = "nanoid-generator", strategy = "com.tth.auth.configuration.jpa.NanoidGenerator")
+  @GenericGenerator(name = "nanoid-generator", strategy = NanoidGenerator.NAME)
   private String id;
 
   @ManyToOne(fetch = FetchType.LAZY)

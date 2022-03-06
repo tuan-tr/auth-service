@@ -6,7 +6,8 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
-import com.tth.auth.entity.audit.FullAuditEntity;
+import com.tth.auth.configuration.hibernate.NanoidGenerator;
+import com.tth.auth.entity.audit.CreateModifyAuditEntity;
 
 import org.hibernate.annotations.GenericGenerator;
 
@@ -24,11 +25,11 @@ import lombok.Setter;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
-public class Group extends FullAuditEntity {
+public class Group extends CreateModifyAuditEntity {
 
   @Id
   @GeneratedValue(generator = "nanoid-generator", strategy = GenerationType.IDENTITY)
-  @GenericGenerator(name = "nanoid-generator", strategy = "com.tth.auth.configuration.jpa.NanoidGenerator")
+  @GenericGenerator(name = "nanoid-generator", strategy = NanoidGenerator.NAME)
   private String id;
 
   private String name;

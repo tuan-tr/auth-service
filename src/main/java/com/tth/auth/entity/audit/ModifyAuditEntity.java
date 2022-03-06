@@ -25,7 +25,7 @@ import lombok.experimental.SuperBuilder;
 @Setter
 @SuperBuilder
 @NoArgsConstructor
-public abstract class ShortAuditEntity {
+public abstract class ModifyAuditEntity {
 
   @LastModifiedDate
   private OffsetDateTime modifiedAt;

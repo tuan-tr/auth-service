@@ -12,7 +12,8 @@ import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
-import com.tth.auth.entity.audit.FullAuditEntity;
+import com.tth.auth.configuration.hibernate.NanoidGenerator;
+import com.tth.auth.entity.audit.CreateModifyAuditEntity;
 
 import org.hibernate.annotations.GenericGenerator;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
@@ -32,11 +33,11 @@ import lombok.Setter;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
-public class User extends FullAuditEntity {
+public class User extends CreateModifyAuditEntity {
 
   @Id
   @GeneratedValue(generator = "nanoid-generator", strategy = GenerationType.IDENTITY)
-  @GenericGenerator(name = "nanoid-generator", strategy = "com.tth.auth.configuration.jpa.NanoidGenerator")
+  @GenericGenerator(name = "nanoid-generator", strategy = NanoidGenerator.NAME)
   private String id;
 
   @Column(updatable = false)

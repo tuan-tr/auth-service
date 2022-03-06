@@ -28,7 +28,7 @@ import lombok.experimental.SuperBuilder;
 @Setter
 @SuperBuilder
 @NoArgsConstructor
-public abstract class FullAuditEntity {
+public abstract class CreateModifyAuditEntity {
 
   @CreatedDate
   @Column(updatable = false)
