@@ -3,6 +3,7 @@ package com.tth.auth.configuration.security.aspect;
 import java.util.List;
 
 import com.tth.auth.configuration.security.annotation.ResourceAuthentication;
+import com.tth.auth.configuration.security.annotation.ResourceAuthentication.ResourceAuthentications;
 import com.tth.auth.configuration.security.user.UserAuthority;
 import com.tth.auth.dto.resourceAuthority.ResourceAccessCredential;
 import com.tth.auth.exception.ResourcePermissionNotFoundException;
@@ -24,7 +25,16 @@ public class ResourceAuthenticationAspect {
 
   @Autowired
   private ResourceAuthorityService resourceAuthorityService;
-
+  
+  @Before("@annotation(resourceAuthentications)")
+  public void verifyPermissionOnResource(JoinPoint joinPoint,
+      ResourceAuthentications resourceAuthentications
+  ) throws Throwable {
+    for (ResourceAuthentication resourceAuthentication : resourceAuthentications.value()) {
+      verifyPermissionOnResource(joinPoint, resourceAuthentication);
+    }
+  }
+  
   @Before("@annotation(resourceAuthentication)")
   public void verifyPermissionOnResource(JoinPoint joinPoint,
       ResourceAuthentication resourceAuthentication
