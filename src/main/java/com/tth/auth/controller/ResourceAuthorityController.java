@@ -1,20 +1,19 @@
 package com.tth.auth.controller;
 
-import java.util.List;
-
 import javax.validation.Valid;
 
 import com.tth.auth.configuration.security.user.UserAuthority;
 import com.tth.auth.constant.ResourcePermission;
 import com.tth.auth.dto.resourceAuthority.ResourceAccessCredential;
 import com.tth.auth.dto.resourceAuthority.ResourceAuthorityCriteria;
-import com.tth.auth.dto.resourceAuthority.ResourceAuthorityData;
+import com.tth.auth.dto.resourceAuthority.ResourceAuthorityDto;
 import com.tth.auth.dto.resourceAuthority.ResourceAuthorityInput;
 import com.tth.auth.service.ResourceAuthorityService;
 import com.tth.auth.util.CurrentUserContext;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.SortDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.annotation.Validated;
@@ -81,8 +80,8 @@ public class ResourceAuthorityController {
   }
 
   @GetMapping
-  public List<ResourceAuthorityData> getList(@Valid ResourceAuthorityCriteria criteria, 
-      @SortDefault(sort = {"resourceType", "targetType"}) Sort sort
+  public Page<ResourceAuthorityDto> getList(@Valid ResourceAuthorityCriteria criteria, 
+      @SortDefault(sort = {"ra.resource_type", "ra.target_type"}) Pageable pageable
   ) {
     UserAuthority currentUser = CurrentUserContext.get();
     
@@ -103,7 +102,7 @@ public class ResourceAuthorityController {
           .build());
     }
     
-    return resourceAuthorityService.getList(criteria, sort);
+    return resourceAuthorityService.getList(criteria, pageable);
   }
 
 }

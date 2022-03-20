@@ -7,9 +7,11 @@ import javax.validation.constraints.AssertTrue;
 import com.tth.auth.constant.ResourcePermission;
 import com.tth.auth.constant.ResourceType;
 
-import lombok.Value;
+import lombok.Getter;
+import lombok.Setter;
 
-@Value
+@Setter
+@Getter
 public class ResourceAuthorityCriteria {
   
   private ResourceType targetType;
@@ -24,18 +26,21 @@ public class ResourceAuthorityCriteria {
   
   @AssertTrue(message="require targetType for targetId")
   boolean isRequireTargetTypeForTargetId() {
-    return targetId == null ^ 
+    return targetId == null ||
         (targetId != null && targetType != null);
   }
   
   @AssertTrue(message="require resourceType for resourceId")
   boolean isRequireResourceTypeForResourceId() {
-    return resourceId == null ^ 
+    return resourceId == null ||
         (resourceId != null && resourceType != null);
   }
   
-  // TODO
-  private Boolean onResourceType;
-  private Boolean unpaged;
+  // @AssertTrue(message="require targetType or resourceType")
+  // boolean isRequireTargetTypeOrResourceType() {
+  //   return targetType != null || resourceType != null;
+  // }
+  
+  private boolean unpaged;
   
 }

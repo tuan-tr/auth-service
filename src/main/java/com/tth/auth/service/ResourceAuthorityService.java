@@ -8,21 +8,21 @@ import com.tth.auth.constant.ResourcePermission;
 import com.tth.auth.constant.ResourceType;
 import com.tth.auth.dto.resourceAuthority.ResourceAccessCredential;
 import com.tth.auth.dto.resourceAuthority.ResourceAuthorityCriteria;
-import com.tth.auth.dto.resourceAuthority.ResourceAuthorityData;
+import com.tth.auth.dto.resourceAuthority.ResourceAuthorityDto;
 import com.tth.auth.dto.resourceAuthority.ResourceAuthorityInput;
 import com.tth.auth.entity.ResourceAuthority;
 import com.tth.auth.exception.EntityNotFoundException;
 import com.tth.auth.exception.ResourcePermissionNotFoundException;
+import com.tth.auth.projector.ResourceAuthorityProjector;
 import com.tth.auth.repository.ResourceAuthorityRepository;
 import com.tth.auth.util.CurrentUserContext;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.apache.commons.collections4.CollectionUtils;
 
 @Service
 @Transactional(readOnly = true)
@@ -46,34 +46,30 @@ public class ResourceAuthorityService {
   }
   
   public boolean hasPermission(ResourceAccessCredential credential) {
-    Pageable limit1Filter = PageRequest.of(0, 1);
-
     int permissions = ResourcePermission.sum(credential.getPermissions());
-
-    List<ResourceAuthority> resourceAuthorities;
+    
+    String resourceAuthorityId;
     boolean isVerifyOnResourceType = credential.getResourceId() == null;
     if (isVerifyOnResourceType) {
-      resourceAuthorities = resourceAuthorityRepository.findOnResourceType(
-          credential.getResourceType(),
+      resourceAuthorityId = resourceAuthorityRepository.findFirstIdMatchToResourceType(
+          credential.getResourceType().toString(),
           credential.getTargetIds(),
-          permissions,
-          limit1Filter);
+          permissions);
     } else {
-      resourceAuthorities = resourceAuthorityRepository.findOnSpecificResource(
-          credential.getResourceType(),
+      resourceAuthorityId = resourceAuthorityRepository.findFirstIdMatchToSpecificResource(
+          credential.getResourceType().toString(),
           credential.getResourceId(),
           credential.getTargetIds(),
-          permissions,
-          limit1Filter);
+          permissions);
     }
-
-    boolean hasPermission = resourceAuthorities.size() > 0;
+    
+    boolean hasPermission = resourceAuthorityId != null;
     return hasPermission;
   }
   
   public List<String> getAuthorizedResourceIds(ResourceAccessCredential credential) {
     int permissions = ResourcePermission.sum(credential.getPermissions());
-    List<String> resourceIds = resourceAuthorityRepository.findResourceIdsByTargets(
+    List<String> resourceIds = resourceAuthorityRepository.findResourceIdsMatchToTargets(
           credential.getResourceType().toString(), 
           credential.getTargetIds(), 
           permissions);
@@ -136,29 +132,19 @@ public class ResourceAuthorityService {
     }
   }
   
-  public List<ResourceAuthorityData> getList(ResourceAuthorityCriteria criteria, Sort sort) {
+  public Page<ResourceAuthorityDto> getList(ResourceAuthorityCriteria criteria, Pageable pageable) {
     UserAuthority currentUser = CurrentUserContext.get();
-    Integer permissions = null;
-    if (CollectionUtils.isEmpty(criteria.getPermissions()) == false) {
-      permissions = ResourcePermission.sum(criteria.getPermissions());
+    
+    Page<String> grantedIdPage = resourceAuthorityRepository
+        .findIdsMatchGrantPermission(currentUser.getResourceAuthorities(), criteria, pageable);
+    
+    if (grantedIdPage.getTotalElements() == 0l) {
+      return new PageImpl<>(Collections.emptyList(), grantedIdPage.getPageable(), 0);
     }
     
-    List<String> grantedIds = resourceAuthorityRepository.findIdsHaveGrantPermission(currentUser.getResourceAuthorities(),
-        criteria.getTargetType(), criteria.getTargetId(),
-        criteria.getResourceType(), criteria.getResourceId(),
-        permissions, sort);
-    
-    if (CollectionUtils.isEmpty(grantedIds)) {
-      return Collections.emptyList();
-    }
-    
-    List<ResourceAuthorityData> page = resourceAuthorityRepository.findList(grantedIds,
-        criteria.getTargetType(), 
-        criteria.getTargetId(),
-        criteria.getResourceType(), criteria.getResourceId(),
-        permissions, sort);
-    
-    return page;
+    List<ResourceAuthority> entities = resourceAuthorityRepository.findByIds(grantedIdPage.getContent());
+    List<ResourceAuthorityDto> content = ResourceAuthorityProjector.convertToDto(entities);
+    return new PageImpl<>(content, grantedIdPage.getPageable(), grantedIdPage.getTotalElements());
   }
   
 }
