@@ -1,4 +1,4 @@
-package com.tth.auth.exception.responseMixIn;
+package com.tth.auth.dto.mixIn;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
