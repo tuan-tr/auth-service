@@ -1,3 +1,5 @@
+-- https://github.com/Jakeii/nanoid-postgres
+
 CREATE EXTENSION IF NOT EXISTS pgcrypto WITH SCHEMA public;
 
 CREATE OR REPLACE FUNCTION public.nanoid(size int DEFAULT 21)
